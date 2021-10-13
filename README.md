@@ -10,12 +10,12 @@ git clone https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector.git
 ```
 conda create -n <VENV_NAME> python=3.8
 ```
-### 3. Install Dependencies in venv to run LSTM Keypoint application
+### 3. Install dependencies in venv
 ```
 pip install -r requirements.txt
 ```
 
-### 4. Change directory to app.py
+### 4. Change directory to Sign-Language-Image-Recognition
 ```
 cd <PATH/TO/Sign-Language-Image-Recognition>
 ```
