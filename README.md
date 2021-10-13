@@ -5,7 +5,6 @@ LSTM Keypoint Model that detects sign language
 ### 1. Clone Repo
 ```
 git clone https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector.git
-
 ```
 ### 2. Create your virtual environment (venv) using conda
 ```
