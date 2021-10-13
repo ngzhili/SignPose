@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+
+  <body>
+    <h1>Sign Language Detection: Static & Dynamic</h1>
+
+    <div>
+        <!--<button type="submit" name="submit_button" onclick = contact() value="Do Something">Load Model!</button>-->
+        <h3>Choose Model</h3>
+          <form method="post" action="/">
+              <input type="submit" value="start_detection" name="LSTM_model" />
+              <!--<input type="submit" value="VALUE2" name="action2" />-->
+          </form>
+
+         
+        
+        <img src="{{ url_for('video_feed') }}" width="100%"/>
+    </div>
+            
+    </body>
+
+
+</html>
