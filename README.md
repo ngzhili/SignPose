@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ```
 cd <PATH/TO/Sign-Language-Image-Recognition>
 ```
-### 5. Run Application in venv same directory as app.py
+### 5. Run Application in same directory as app.py
 ```
 flask run
 ```
