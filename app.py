@@ -1,6 +1,7 @@
 from flask import Flask,render_template,Response,request
 import cv2
 import time
+import sys
 
 import numpy as np
 import os
@@ -10,6 +11,10 @@ import mediapipe as mp
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 #from tensorflow.keras.callbacks import TensorBoard
+
+sys.path.append('./mediapipe_functions.py')
+from mediapipe_functions import mediapipe_detection, draw_landmarks, draw_styled_landmarks, extract_keypoints
+
 video_id = 'no'
 
 app=Flask(__name__)
@@ -29,6 +34,7 @@ def index():
 mp_holistic = mp.solutions.holistic # Holistic model
 mp_drawing = mp.solutions.drawing_utils # Drawing utilities
 
+'''
 # Make keypoint detection, model can only detect in RGB
 def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # COLOR CONVERSION BGR 2 RGB as model can only detect in RGB
@@ -66,7 +72,7 @@ def draw_styled_landmarks(image, results): # draw landmarks for each image/frame
                              mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                              mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=1)
                              ) 
-    
+'''
 # define extract keypoint function
 def extract_keypoints(results):
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
@@ -75,8 +81,10 @@ def extract_keypoints(results):
     rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
     return np.concatenate([pose, face, lh, rh]) # concatenate all the keypoints that are flattened
 
+
 # Actions that we try to detect
-actions = np.array(['hello', 'thanks', 'iloveyou'])
+#actions = np.array(['hello', 'thanks', 'iloveyou'])
+actions = np.array(['Alligator','Butterfly','Cow','Elephant','Gorilla'])
 
 label_map = {label:num for num, label in enumerate(actions)} #create label map dictionary
 
@@ -91,10 +99,11 @@ model.add(Dense(actions.shape[0], activation='softmax'))
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 print('Loading Model...')
-model.load_weights('first_model_action.h5')
+#model.load_weights('./models/first_model_action.h5')
+model.load_weights('./models/animal_asl_5_classes_1000_epoch_action.h5')
 print('Model Loaded!')
 
-colors = [(245,117,16), (117,245,16), (16,117,245)]
+colors = [(245,117,16), (117,245,16), (16,117,245),(245,0,0),(0,245,0)]
 def prob_viz(res, actions, input_frame, colors):
     output_frame = input_frame.copy()
     for num, prob in enumerate(res):
@@ -104,7 +113,6 @@ def prob_viz(res, actions, input_frame, colors):
     return output_frame
 
 
-   
 def gen():
     # 1. New detection variables
     sequence = []
