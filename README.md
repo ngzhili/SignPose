@@ -10,16 +10,22 @@ git clone https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector.git
 ```
 conda create -n <VENV_NAME> python=3.8
 ```
-### 3. Install dependencies in venv
+
+### 3. Activate your virtual environment (venv) using conda
+```
+conda activate <VENV_NAME>
+```
+
+### 4. Install dependencies in venv
 ```
 pip install -r requirements.txt
 ```
 
-### 4. Change directory to Sign-Language-Image-Recognition
+### 5. Change directory to Sign-Language-Image-Recognition
 ```
 cd <PATH/TO/Sign-Language-Image-Recognition>
 ```
-### 5. Run Application in same directory as app.py
+### 6. Run Application in same directory as app.py
 ```
 flask run
 ```
