@@ -100,7 +100,8 @@ model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categ
 
 print('Loading Model...')
 #model.load_weights('./models/first_model_action.h5')
-model.load_weights('./models/animal_asl_5_classes_1000_epoch_action.h5')
+#model.load_weights('./models/animal_asl_5_classes_1000_epoch_action.h5')
+model.load_weights('./models/Epoch-144-Loss-0.53.h5')
 print('Model Loaded!')
 
 colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179)]
