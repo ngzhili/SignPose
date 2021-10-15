@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 <html>
-
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Sign Language Keypoint Detection</title>
+    <meta
+      name="description"
+      content="An interactive sign language app created using LSTM keypoint detection, created by Zhili and Pei Zhen."
+    />
+  </head>
 
   <body>
-    <h1>Sign Language Detection: Static & Dynamic</h1>
-
-    <div>
-        <!--<button type="submit" name="submit_button" onclick = contact() value="Do Something">Load Model!</button>-->
-        <h3>Choose Model</h3>
-          <form method="post" action="/">
-              <input type="submit" value="start_detection" name="LSTM_model" />
-              <!--<input type="submit" value="VALUE2" name="action2" />-->
-          </form>
-
-         
-        
-        <img src="{{ url_for('video_feed') }}" width="70%"/>
+    <div class="app-container">
+      <div class="app-bar">
+        <div class="logo-container">
+          <img
+            class="logo"
+            src="../static/images/jungle.png"
+            alt="jungle logo"
+          />
+        </div>
+        <div class="intro-container">
+          <h1 class="title-text">Sign Language Detection Game</h1>
+          <p class="description-text">
+            A LSTM keypoint detection model by Zhili and Pei Zhen
+          </p>
+        </div>
+      </div>
+      <div class="body-container">
+        <div class="video-container">
+          <img src="{{ url_for('video_feed') }}" width="80%" />
+        </div>
+      </div>
     </div>
-            
-    </body>
-
-
+  </body>
 </html>
