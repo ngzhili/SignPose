@@ -103,12 +103,12 @@ print('Loading Model...')
 model.load_weights('./models/animal_asl_5_classes_1000_epoch_action.h5')
 print('Model Loaded!')
 
-colors = [(245,117,16), (117,245,16), (16,117,245),(245,0,0),(0,245,0)]
+colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179)]
 def prob_viz(res, actions, input_frame, colors):
     output_frame = input_frame.copy()
     for num, prob in enumerate(res):
         cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1) #change length of bar depending on probability
-        cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+        cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
         #cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
     return output_frame
 
@@ -166,7 +166,7 @@ def gen():
                     # Viz probabilities
                     image = prob_viz(res, actions, image, colors)
                     
-                cv2.rectangle(image, (0,0), (640, 40), (245, 117, 16), -1)
+                cv2.rectangle(image, (0,0), (700, 40), (0, 60, 123), -1)
                 cv2.putText(image, ' '.join(sentence), (3,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
 
