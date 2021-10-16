@@ -1,6 +1,10 @@
 # LSTM_Keypoint_Sign_Language_Detector
 An LSTM Keypoint Model that detects real time dynamic sign language deployed on flask API.
 
+
+![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/c46727ba2c1eba3ce4712fb839539bccfb874811/readme-images/run4%20Model%20Training%20and%20Validation%20Categorical%20Accuracy.jpg)
+
+
 ## Installation in command prompt
 ### 1. Clone Repo
 ```
