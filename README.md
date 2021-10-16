@@ -1,6 +1,9 @@
 # LSTM_Keypoint_Sign_Language_Detector
 An LSTM Keypoint Model that detects real time dynamic sign language deployed on flask API.
 
+## Web Application deployed via flask
+
+
 ## Exploratory Data Analysis
 Breakdown of Train Test Split using Stratified Sampling (to ensure even distribution of train and test data)
 
