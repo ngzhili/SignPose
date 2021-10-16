@@ -27,7 +27,7 @@ model.add(Dense(actions.shape[0], activation='softmax'))
 
 ![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/c46727ba2c1eba3ce4712fb839539bccfb874811/readme-images/run4%20Model%20Training%20and%20Validation%20Categorical%20Accuracy.jpg)
 
-2. Train & Test Loss over epochs
+2. Train & Test Loss over epochs (early stopping implemented to prevent overfitting)
 
 ![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/4dcd3fb656f62611dc81b497ab7eef885ff3ab4a/readme-images/run4%20Model%20Training%20and%20Validation%20Loss.jpg)
 
