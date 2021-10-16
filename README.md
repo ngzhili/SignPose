@@ -1,5 +1,5 @@
 # LSTM_Keypoint_Sign_Language_Detector
-LSTM Keypoint Model that detects sign language
+An LSTM Keypoint Model that detects real time dynamic sign language deployed on flask API.
 
 ## Installation in command prompt
 ### 1. Clone Repo
