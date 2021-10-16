@@ -22,10 +22,11 @@ app=Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
-    if request.method == 'POST':
-        if request.form.get('LSTM_model') == 'start_detection':
+    #if request.method == 'POST':
+        #if request.form.get('LSTM_model') == 'start_detection':
             #print('hello123')
-            video_id = 'lstm'
+            #video_id = 'lstm'
+
     """Video streaming home page."""
     return render_template('index.html')
 
@@ -40,6 +41,7 @@ actions = np.array(['Alligator','Butterfly','Cow','Elephant','Gorilla'])
 
 label_map = {label:num for num, label in enumerate(actions)} #create label map dictionary
 
+# Build Model
 model = Sequential()
 model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662))) #each video has input shape of 30 frames of 1662 keypoints: X.shape
 model.add(LSTM(128, return_sequences=True, activation='relu'))
@@ -48,6 +50,7 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
 
+#Compile Model
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 print('Loading Model...')
@@ -64,6 +67,7 @@ def gen():
     sentence = []
     predictions = []
     threshold = 0.5
+    #threshold = model_threshold_slider
     """Video streaming generator function."""
     cap = cv2.VideoCapture(0)
     sent =''
