@@ -48,6 +48,118 @@ def draw_styled_landmarks(image, results): # draw landmarks for each image/frame
                              mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                              mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=1)
                              ) 
+
+def add_image(image,results, action):
+
+    #height,width = image.shape
+    #print(image.shape)
+    width = image.shape[1]#480
+    height= image.shape[0]#640
+
+    def overlay_transparent(background, overlay, x, y):
+        
+        # height and width of background image
+        background_width = background.shape[1]
+        background_height = background.shape[0]
+        
+        # if coordinate x and y is larger than background width and height, stop code
+        if x >= background_width or y >= background_height:
+            return background
+        
+        # height and width of overlay image
+        h, w = overlay.shape[0], overlay.shape[1]
+        
+        # if coordinate x + width of overlay is larger than background width and height, stop code
+        if x + w > background_width:
+            #w = background_width - x
+            #overlay = overlay[:, :w]
+            return background
+        if x - w < 0:
+            #w = background_width - x
+            #overlay = overlay[:, :w]
+            return background
+        if y + h > background_height:
+            #h = background_height - y
+            #overlay = overlay[:h]
+            return background
+        
+        if y - h < 0:
+            #h = background_height - y
+            #overlay = overlay[:h]
+            return background
+        
+        if overlay.shape[2] < 4:
+            overlay = np.concatenate(
+                [
+                    overlay,
+                    np.ones((overlay.shape[0], overlay.shape[1], 1), dtype = overlay.dtype) * 255
+                ],
+                axis = 2,
+            )
+
+        overlay_image = overlay[..., :3]
+        mask = overlay[..., 3:] / 255.0
+
+        background[y:y+h, x:x+w] = (1.0 - mask) * background[y:y+h, x:x+w] + mask * overlay_image
+
+        return background
+
+    index = 10
+    
+    face_keypoint=np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark])if results.face_landmarks else np.zeros(468*3)
+    #print(len(face_keypoint))
+    #print(action)
+    if face_keypoint.size != 0 and np.any(face_keypoint[index]) == True:
+        if action =='Butterfly':
+            file_name = './emoji/butterfly.png'
+        elif action =='Gorilla':
+            file_name = './emoji/gorilla.png'
+        elif action == 'Cow':
+            file_name = './emoji/cow.png'
+        elif action == 'Elephant':
+            file_name = './emoji/elephant.png'
+        elif action == 'Alligator':
+            file_name = './emoji/alligator.png'
+        else:
+            file_name = './emoji/No_sign.png'
+
+        overlay= cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
+
+        #overlay= cv2.resize(overlay, (0,0), fx=min(0.1,float(1/face_keypoint[index][2]*-20)), fy=min(0.1,float(1/face_keypoint[index][2]*-20)))
+        #print('z normalized',face_keypoint[index][2])
+        #if face_keypoint[index][2]*-100 >1:
+            #print('close to camera')
+        #else:
+            #print('far from camera')
+
+        new_z = 0.1/((float(face_keypoint[index][2]*10)-(-1))/(1+1))
+        #print('new_z',new_z)
+        #print('z ',face_keypoint[index][2]*-10)
+        #print('fx:',new_z)
+        #print('fy:',new_z)
+        overlay= cv2.resize(overlay, (0,0), fx=min(0.5,new_z), fy=min(0.5,float(new_z)))
+
+        #print('Normalized',face_keypoint[index])
+        x = int(float(face_keypoint[index][0])*width)
+        y = int(float(face_keypoint[index][1])*height)
+        #print('Actual x',x)
+        #print('Actual y',y)
+        #cv2.circle(image,(x,y),3,(255,255,0),thickness= -1)
+
+        #overlay = img2.copy()
+        #image = cv2.rectangle(image, (x,y), (x+overlay.shape[1],y-overlay.shape[0]), (255,0,0), 3)
+
+        #image = cv2.addWeighted(image,0.4,overlay,0.1,0)
+
+        image = overlay_transparent(image, overlay, x - int(overlay.shape[0]/2), y-overlay.shape[0])
+
+
+        #Setting the paste destination coordinates. For the time being, in the upper left
+        #x1, y1, x2, y2 = x, y, overlay.shape[1], overlay.shape[0]
+
+        #Synthetic!
+        #image[y1:y2, x1:x2] = overlay[y1:y2, x1:x2]
+
     
 # define extract keypoint function
 def extract_keypoints(results):
@@ -56,3 +168,11 @@ def extract_keypoints(results):
     lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
     rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
     return np.concatenate([pose, face, lh, rh]) # concatenate all the keypoints that are flattened
+
+def prob_viz(res, actions, input_frame, colors):
+    output_frame = input_frame.copy()
+    for num, prob in enumerate(res):
+        cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1) #change length of bar depending on probability
+        cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
+        #cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
+    return output_frame

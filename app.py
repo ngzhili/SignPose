@@ -13,7 +13,7 @@ from tensorflow.keras.layers import LSTM, Dense
 #from tensorflow.keras.callbacks import TensorBoard
 
 sys.path.append('./mediapipe_functions.py')
-from mediapipe_functions import mediapipe_detection, draw_landmarks, draw_styled_landmarks, extract_keypoints
+from mediapipe_functions import mediapipe_detection, draw_landmarks, draw_styled_landmarks, extract_keypoints, add_image, prob_viz
 
 video_id = 'no'
 
@@ -33,54 +33,6 @@ def index():
 # Use Holistic Models for detections
 mp_holistic = mp.solutions.holistic # Holistic model
 mp_drawing = mp.solutions.drawing_utils # Drawing utilities
-
-'''
-# Make keypoint detection, model can only detect in RGB
-def mediapipe_detection(image, model):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # COLOR CONVERSION BGR 2 RGB as model can only detect in RGB
-    image.flags.writeable = False                  # Image is no longer writeable
-    results = model.process(image)                 # Use Model to make prediction
-    image.flags.writeable = True                   # Image is now writeable 
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR) # COLOR COVERSION RGB 2 BGR
-    return image, results
-
-def draw_landmarks(image, results): # draw landmarks for each image/frame
-    mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_CONTOURS) # Draw face connections
-    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS) # Draw pose connections
-    mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS) # Draw left hand connections
-    mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS) # Draw right hand connections
-    
-    
-def draw_styled_landmarks(image, results): # draw landmarks for each image/frame, fix colour of landmark drawn
-    # Draw face connections
-    mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_CONTOURS, 
-                             mp_drawing.DrawingSpec(color=(80,110,10), thickness=1, circle_radius=1), 
-                             mp_drawing.DrawingSpec(color=(80,256,121), thickness=1, circle_radius=1)
-                             ) 
-    # Draw pose connections
-    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS,
-                             mp_drawing.DrawingSpec(color=(80,22,10), thickness=2, circle_radius=2), 
-                             mp_drawing.DrawingSpec(color=(80,44,121), thickness=2, circle_radius=1)
-                             ) 
-    # Draw left hand connections
-    mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS, 
-                             mp_drawing.DrawingSpec(color=(121,22,76), thickness=2, circle_radius=2), 
-                             mp_drawing.DrawingSpec(color=(121,44,250), thickness=2, circle_radius=1)
-                             ) 
-    # Draw right hand connections  
-    mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS, 
-                             mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
-                             mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=1)
-                             ) 
-'''
-# define extract keypoint function
-def extract_keypoints(results):
-    pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
-    face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
-    lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
-    rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
-    return np.concatenate([pose, face, lh, rh]) # concatenate all the keypoints that are flattened
-
 
 # Actions that we try to detect
 #actions = np.array(['hello', 'thanks', 'iloveyou'])
@@ -105,14 +57,6 @@ model.load_weights('./models/Epoch-144-Loss-0.53.h5')
 print('Model Loaded!')
 
 colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179)]
-def prob_viz(res, actions, input_frame, colors):
-    output_frame = input_frame.copy()
-    for num, prob in enumerate(res):
-        cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1) #change length of bar depending on probability
-        cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
-        #cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
-    return output_frame
-
 
 def gen():
     # 1. New detection variables
@@ -130,7 +74,7 @@ def gen():
         # Capture frame-by-frame
             ret, image = cap.read()
             if ret == True:
-                #img = cv2.resize(img, (0,0), fx=0.5, fy=0.5) 
+
 
                 # Make detections
                 image, results = mediapipe_detection(image, holistic)
@@ -139,9 +83,11 @@ def gen():
                 # Draw landmarks
                 draw_styled_landmarks(image, results)
 
-
                 # 2. Prediction logic
                 keypoints = extract_keypoints(results)
+                
+                #print(keypoints)
+                
                 sequence.append(keypoints)
                 sequence = sequence[-30:]
                 
@@ -153,7 +99,10 @@ def gen():
                 #3. Viz logic
                     if np.unique(predictions[-10:])[0]==np.argmax(res): 
                         if res[np.argmax(res)] > threshold: 
-                            
+
+                            # Add overlay image if the most confident is more than the threshold
+                            add_image(image, results, str(actions[np.argmax(res)]))
+
                             if len(sentence) > 0: 
                                 # if action is not in the last sentence, then we append the last action to the sentence
                                 if actions[np.argmax(res)] != sentence[-1]: 
