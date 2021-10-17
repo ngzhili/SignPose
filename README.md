@@ -3,10 +3,12 @@ An LSTM Keypoint Model that detects real time dynamic sign language deployed on 
 
 ## Web Application deployed via flask
 
-Cow Sign Language Detection
+1. Cow Sign Language Detection
+2. 
 ![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/32794c1761fa9fec34b04164e583264050822f94/readme-images/lstm-1.JPG)
 
-Elephant Sign Language Detection
+2. Elephant Sign Language Detection
+
 ![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/32794c1761fa9fec34b04164e583264050822f94/readme-images/lstm-2.JPG)
 
 ## Exploratory Data Analysis
