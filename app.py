@@ -1,4 +1,4 @@
-from flask import Flask,render_template,Response,request
+from flask import Flask,render_template,Response,request,json,jsonify
 import cv2
 import time
 import sys
@@ -29,6 +29,39 @@ def index():
 
     """Video streaming home page."""
     return render_template('index.html')
+
+# Initialise detection confidence
+lstm_threshold = 0.5
+toggle_keypoints = True
+
+@app.route('/process_slider_value', methods=['POST', 'GET'])
+def process_slider_value():
+    global lstm_threshold
+    global toggle_keypoints
+    if request.method == "POST":
+        slider_data = request.get_json()
+        print(slider_data)
+        #print(slider_data[0]['slider'])
+        lstm_threshold = float(slider_data[0]['slider'])
+        #toggle_keypoints = slider_data[0]['toggle']
+        print('LSTM Detection Threshold:',lstm_threshold)
+        #print('Toggle_keypoints:',toggle_keypoints)
+    
+    results = {'processed': 'true'}
+    return jsonify(results)
+
+@app.route('/process_toggle_value', methods=['POST', 'GET'])
+def process_toggle_value():
+    global toggle_keypoints
+    if request.method == "POST":
+        toggle_data = request.get_json()
+        print(toggle_data)
+        #print(slider_data[0]['slider'])
+        toggle_keypoints = toggle_data[0]['toggle']
+        print('Toggle_keypoints:',toggle_keypoints)
+    
+    results = {'processed': 'true'}
+    return jsonify(results)
 
 
 # Use Holistic Models for detections
@@ -63,29 +96,40 @@ colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179
 
 def gen():
     # 1. New detection variables
+    
     sequence = []
     sentence = []
     predictions = []
-    threshold = 0.5
-    #threshold = model_threshold_slider
+    #threshold = 0.5
+    #threshold = min_detection_confidence
     """Video streaming generator function."""
     cap = cv2.VideoCapture(0)
     sent =''
     
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
         # Read until video is completed
+        
         while(cap.isOpened()):
         # Capture frame-by-frame
+
+            global lstm_threshold
+            #print('LSTM Model Detection Threshold = ',lstm_threshold)
+            threshold = lstm_threshold
+
+            global toggle_keypoints
+
             ret, image = cap.read()
             if ret == True:
 
+                #print('threshold',threshold)
 
                 # Make detections
                 image, results = mediapipe_detection(image, holistic)
                 #print(results)
 
                 # Draw landmarks
-                draw_styled_landmarks(image, results)
+                if toggle_keypoints:
+                    draw_styled_landmarks(image, results)
 
                 # 2. Prediction logic
                 keypoints = extract_keypoints(results)
