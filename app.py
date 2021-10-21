@@ -33,22 +33,7 @@ def index():
 # Initialise detection confidence
 lstm_threshold = 0.5
 toggle_keypoints = True
-
-@app.route('/process_slider_value', methods=['POST', 'GET'])
-def process_slider_value():
-    global lstm_threshold
-    global toggle_keypoints
-    if request.method == "POST":
-        slider_data = request.get_json()
-        print(slider_data)
-        #print(slider_data[0]['slider'])
-        lstm_threshold = float(slider_data[0]['slider'])
-        #toggle_keypoints = slider_data[0]['toggle']
-        print('LSTM Detection Threshold:',lstm_threshold)
-        #print('Toggle_keypoints:',toggle_keypoints)
-    
-    results = {'processed': 'true'}
-    return jsonify(results)
+mediapipe_detection_confidence = 0.5
 
 @app.route('/process_toggle_value', methods=['POST', 'GET'])
 def process_toggle_value():
@@ -59,9 +44,40 @@ def process_toggle_value():
         #print(slider_data[0]['slider'])
         toggle_keypoints = toggle_data[0]['toggle']
         print('Toggle_keypoints:',toggle_keypoints)
+    results = {'processed': 'true'}
+    return jsonify(results)
+
+@app.route('/process_slider_value', methods=['POST', 'GET'])
+def process_slider_value():
+    global lstm_threshold
+
+    if request.method == "POST":
+        slider_data = request.get_json()
+        print(slider_data)
+        #print(slider_data[0]['slider'])
+        lstm_threshold = float(slider_data[0]['slider'])
+        print('LSTM Detection Threshold:',lstm_threshold)
+    results = {'processed': 'true'}
+    return jsonify(results)
+
+'''
+@app.route('/process_mediapipe_slider_value1', methods=['POST', 'GET'])
+def process_mediapipe_slider_value1():
+    global mediapipe_detection_confidence
+    if request.method == "POST":
+        slider_data1 = request.get_json()
+        print(slider_data1)
+        #print(slider_data[0]['slider'])
+        mediapipe_detection_confidence = float(slider_data1[0]['slider'])
+        #toggle_keypoints = slider_data[0]['toggle']
+        print('Mediapipe_Detection_Confidence:',mediapipe_detection_confidence)
+        #print('Toggle_keypoints:',toggle_keypoints)
     
     results = {'processed': 'true'}
     return jsonify(results)
+'''    
+
+
 
 
 # Use Holistic Models for detections
@@ -105,6 +121,9 @@ def gen():
     """Video streaming generator function."""
     cap = cv2.VideoCapture(0)
     sent =''
+
+    global mediapipe_detection_confidence
+    print(mediapipe_detection_confidence)
     
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
         # Read until video is completed

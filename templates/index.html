@@ -87,6 +87,7 @@
         }
 
 
+
         /* The switch - the box around the slider */
         .switch {
           position: relative;
@@ -161,14 +162,35 @@
           <span class="slider_switch round"></span>
         </label></p>
       </div>
+      
+      </a>
+
+  
 
       <div class="slidecontainer">
-        <p>LSTM Model Detection Threshold = <span id="demo"></span>
+        <p>
+          <a class="ui-tooltip" title="Adjust Minimum Threshold for LSTM model to display animal emoji on webcam screen.">
+          <span style="cursor: help;">LSTM Model Detection Threshold</span></a>
+          
+          = <span id="demo"></span></p>
+
         <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="myRange">
-      </p>
+      
       </div>
 
+      
+      <!--<div class="slidecontainer">
+        <p>Mediapipe Keypoint Detection Confidence = <span id="demo1"></span>
+        <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider1" id="myRange1">
+      </p>
+      </div>-->
+
+
+
+      <!-- Functions for jQuery AJAX -->
       <script>
+
+      //Toggle Keypoints Switch
       var switchValues = { };
       function switched (switchElement) {
         switchValues[switchElement.id] = switchElement.checked;
@@ -207,6 +229,28 @@
             }
           });
       }
+
+
+      //Mediapipe Keypoint Detection Confidence Slider AJAX
+      /*var slider1 = document.getElementById("myRange1");
+      var output1 = document.getElementById("demo1");
+      output1.innerHTML = slider1.value;
+
+      slider1.oninput = function() {
+        output1.innerHTML = this.value;
+        var mediapipe_slider_value1 = [{"slider":this.value}];
+        $.ajax({
+            type: "POST",
+            url: "/process_mediapipe_slider_value1",
+            data: JSON.stringify(mediapipe_slider_value1),
+            contentType: "application/json",
+            dataType: 'json', 
+            success: function(result) {
+            console.log("Result:");
+            console.log(result);
+            }
+          });
+      }*/
       </script> 
 
 
