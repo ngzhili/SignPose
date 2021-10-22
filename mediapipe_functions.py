@@ -65,16 +65,33 @@ def add_image(image,results, action):
         # if coordinate x and y is larger than background width and height, stop code
         if x >= background_width or y >= background_height:
             return background
+
+        
         
         # height and width of overlay image
         h, w = overlay.shape[0], overlay.shape[1]
+
+        #print('x:',x)
+        #print('overlay_width:',w)
+        #print('background_width:',background_width)
+       
+
+        #print('y:',y)
+        #print('overlay_height:',h)
+        #print('background_height:',background_width)
+        
+
+        if w >= background_width:
+            return background
+        if h >= background_height:
+            return background
         
         # if coordinate x + width of overlay is larger than background width and height, stop code
         if x + w > background_width:
             #w = background_width - x
             #overlay = overlay[:, :w]
             return background
-        if x - w < 0:
+        if x - w < 2:
             #w = background_width - x
             #overlay = overlay[:, :w]
             return background
@@ -83,7 +100,7 @@ def add_image(image,results, action):
             #overlay = overlay[:h]
             return background
         
-        if y - h < 0:
+        if y - h < 2:
             #h = background_height - y
             #overlay = overlay[:h]
             return background
@@ -110,6 +127,9 @@ def add_image(image,results, action):
     #print(len(face_keypoint))
     #print(action)
     if face_keypoint.size != 0 and np.any(face_keypoint[index]) == True:
+
+        if action =='Bird':
+            file_name = './emoji/bird.png'
         if action =='Butterfly':
             file_name = './emoji/butterfly.png'
         elif action =='Gorilla':
@@ -137,7 +157,10 @@ def add_image(image,results, action):
         #print('z ',face_keypoint[index][2]*-10)
         #print('fx:',new_z)
         #print('fy:',new_z)
-        overlay= cv2.resize(overlay, (0,0), fx=min(0.5,new_z), fy=min(0.5,float(new_z)))
+
+        #print(min(0.5,float(new_z)))
+
+        overlay= cv2.resize(overlay, (0,0), fx=min(0.5,abs(float(new_z))), fy=min(0.5,abs(float(new_z))))
 
         #print('Normalized',face_keypoint[index])
         x = int(float(face_keypoint[index][0])*width)

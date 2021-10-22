@@ -12,6 +12,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 #from tensorflow.keras.callbacks import TensorBoard
 
+os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
+
 sys.path.append('./mediapipe_functions.py')
 from mediapipe_functions import mediapipe_detection, draw_landmarks, draw_styled_landmarks, extract_keypoints, add_image, prob_viz
 
@@ -86,7 +88,10 @@ mp_drawing = mp.solutions.drawing_utils # Drawing utilities
 
 # Actions that we try to detect
 #actions = np.array(['hello', 'thanks', 'iloveyou'])
-actions = np.array(['Alligator','Butterfly','Cow','Elephant','Gorilla'])
+#actions = np.array(['Alligator','Butterfly','Cow','Elephant','Gorilla'])
+
+actions = np.array(['Bird','Butterfly','Cow','Elephant','Gorilla','No Action'])
+
 
 label_map = {label:num for num, label in enumerate(actions)} #create label map dictionary
 
@@ -105,10 +110,12 @@ model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categ
 print('Loading Model...')
 #model.load_weights('./models/first_model_action.h5')
 #model.load_weights('./models/animal_asl_5_classes_1000_epoch_action.h5')
-model.load_weights('./models/Epoch-144-Loss-0.53.h5')
+#model.load_weights('./models/Epoch-144-Loss-0.53.h5')
+
+model.load_weights('./models/animal_6_classes_Epoch-237-Loss-0.12.h5')
 print('Model Loaded!')
 
-colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179)]
+colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179),(0,0,179)]
 
 def gen():
     # 1. New detection variables
