@@ -130,7 +130,7 @@ def add_image(image,results, action):
 
         if action =='Bird':
             file_name = './emoji/bird.png'
-        if action =='Butterfly':
+        elif action =='Butterfly':
             file_name = './emoji/butterfly.png'
         elif action =='Gorilla':
             file_name = './emoji/gorilla.png'
@@ -142,7 +142,8 @@ def add_image(image,results, action):
             file_name = './emoji/alligator.png'
         else:
             file_name = './emoji/No_sign.png'
-
+            
+            
         overlay= cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
 
         #overlay= cv2.resize(overlay, (0,0), fx=min(0.1,float(1/face_keypoint[index][2]*-20)), fy=min(0.1,float(1/face_keypoint[index][2]*-20)))
