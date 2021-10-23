@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 import mediapipe as mp
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 #from tensorflow.keras.callbacks import TensorBoard
 
 os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
@@ -104,6 +104,17 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
 
+
+# Build Model Architecture (Body pose and Handpose only)
+model = Sequential()
+model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,258))) #each video has input shape of 30 frames of 1662 keypoints: X.shape
+model.add(LSTM(128, return_sequences=True, activation='relu'))
+model.add(Dropout(0.2))
+model.add(LSTM(64, return_sequences=False, activation='relu')) #next layer is a dense layer so we do not return sequences here
+model.add(Dense(64, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(actions.shape[0], activation='softmax'))
+
 #Compile Model
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
@@ -112,7 +123,9 @@ print('Loading Model...')
 #model.load_weights('./models/animal_asl_5_classes_1000_epoch_action.h5')
 #model.load_weights('./models/Epoch-144-Loss-0.53.h5')
 
-model.load_weights('./models/animal_6_classes_Epoch-237-Loss-0.12.h5')
+#model.load_weights('./models/animal_6_classes_Epoch-237-Loss-0.12.h5')
+model.load_weights('./models/run6.h5')
+
 print('Model Loaded!')
 
 colors = [(245,221,173), (245,185,265), (146,235,193),(204,152,295),(255,217,179),(0,0,179)]
