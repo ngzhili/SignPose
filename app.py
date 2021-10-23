@@ -185,7 +185,8 @@ def gen():
                     
                 #3. Viz logic
                     if np.unique(predictions[-10:])[0]==np.argmax(res): 
-                        if res[np.argmax(res)] > threshold: 
+                        if res[np.argmax(res)] > threshold and actions[np.argmax(res)] != 'No Action': 
+                            #print(actions[np.argmax(res)])
 
                             # Add overlay image if the most confident is more than the threshold
                             add_image(image, results, str(actions[np.argmax(res)]))

@@ -143,46 +143,46 @@ def add_image(image,results, action):
         else:
             file_name = './emoji/No_sign.png'
             
-            
-        overlay= cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
+        if action != 'No Action':    
+            overlay= cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
 
-        #overlay= cv2.resize(overlay, (0,0), fx=min(0.1,float(1/face_keypoint[index][2]*-20)), fy=min(0.1,float(1/face_keypoint[index][2]*-20)))
-        #print('z normalized',face_keypoint[index][2])
-        #if face_keypoint[index][2]*-100 >1:
-            #print('close to camera')
-        #else:
-            #print('far from camera')
+            #overlay= cv2.resize(overlay, (0,0), fx=min(0.1,float(1/face_keypoint[index][2]*-20)), fy=min(0.1,float(1/face_keypoint[index][2]*-20)))
+            #print('z normalized',face_keypoint[index][2])
+            #if face_keypoint[index][2]*-100 >1:
+                #print('close to camera')
+            #else:
+                #print('far from camera')
 
-        new_z = 0.1/((float(face_keypoint[index][2]*10)-(-1))/(1+1))
-        #print('new_z',new_z)
-        #print('z ',face_keypoint[index][2]*-10)
-        #print('fx:',new_z)
-        #print('fy:',new_z)
+            new_z = 0.1/((float(face_keypoint[index][2]*10)-(-1))/(1+1))
+            #print('new_z',new_z)
+            #print('z ',face_keypoint[index][2]*-10)
+            #print('fx:',new_z)
+            #print('fy:',new_z)
 
-        #print(min(0.5,float(new_z)))
+            #print(min(0.5,float(new_z)))
 
-        overlay= cv2.resize(overlay, (0,0), fx=min(0.5,abs(float(new_z))), fy=min(0.5,abs(float(new_z))))
+            overlay= cv2.resize(overlay, (0,0), fx=min(0.5,abs(float(new_z))), fy=min(0.5,abs(float(new_z))))
 
-        #print('Normalized',face_keypoint[index])
-        x = int(float(face_keypoint[index][0])*width)
-        y = int(float(face_keypoint[index][1])*height)
-        #print('Actual x',x)
-        #print('Actual y',y)
-        #cv2.circle(image,(x,y),3,(255,255,0),thickness= -1)
+            #print('Normalized',face_keypoint[index])
+            x = int(float(face_keypoint[index][0])*width)
+            y = int(float(face_keypoint[index][1])*height)
+            #print('Actual x',x)
+            #print('Actual y',y)
+            #cv2.circle(image,(x,y),3,(255,255,0),thickness= -1)
 
-        #overlay = img2.copy()
-        #image = cv2.rectangle(image, (x,y), (x+overlay.shape[1],y-overlay.shape[0]), (255,0,0), 3)
+            #overlay = img2.copy()
+            #image = cv2.rectangle(image, (x,y), (x+overlay.shape[1],y-overlay.shape[0]), (255,0,0), 3)
 
-        #image = cv2.addWeighted(image,0.4,overlay,0.1,0)
+            #image = cv2.addWeighted(image,0.4,overlay,0.1,0)
 
-        image = overlay_transparent(image, overlay, x - int(overlay.shape[0]/2), y-overlay.shape[0])
+            image = overlay_transparent(image, overlay, x - int(overlay.shape[0]/2), y-overlay.shape[0])
 
 
-        #Setting the paste destination coordinates. For the time being, in the upper left
-        #x1, y1, x2, y2 = x, y, overlay.shape[1], overlay.shape[0]
+            #Setting the paste destination coordinates. For the time being, in the upper left
+            #x1, y1, x2, y2 = x, y, overlay.shape[1], overlay.shape[0]
 
-        #Synthetic!
-        #image[y1:y2, x1:x2] = overlay[y1:y2, x1:x2]
+            #Synthetic!
+            #image[y1:y2, x1:x2] = overlay[y1:y2, x1:x2]
 
     
 # define extract keypoint function
