@@ -60,7 +60,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-height: 100%;
 }
 @media only screen and (max-width: 1024px) {
   .video-container {
