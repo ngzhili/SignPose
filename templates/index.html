@@ -1,212 +1,87 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"
-    />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}"
-    />
-    
-    <link rel="stylesheet" href = "{{ url_for('static', filename='css/main.css') }}"
-    />
 
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap"
-      rel="stylesheet"
-    />
-    
-    <title>Sign Language Keypoint Detection</title>
-    <meta
-      name="description"
-      content="An interactive dynamic sign language app created using LSTM keypoint detection, created by Zhili and Pei Zhen."
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
-  
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}" />
 
-  <body>
-    <div class="app-container">
-      <div class="app-bar">
-        <div class="logo-container">
-          <img
-            class="logo"
-            src="../static/images/jungle.png"
-            alt="jungle logo"
-          />
-        </div>
-        <div class="intro-container">
-          <h1 class="title-text">Dynamic Sign Language Detection Game</h1>
-          <p class="description-text">
-            An LSTM keypoint detection model by Zhili and Pei Zhen
-          </p>
-        </div>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap" rel="stylesheet" />
+
+  <title>Sign Language Keypoint Detection</title>
+  <meta name="description"
+    content="An interactive dynamic sign language app created using LSTM keypoint detection, created by Zhili and Pei Zhen." />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+  <div class="game-container">
+    <div class="app-bar">
+      <div class="logo-container">
+        <img class="logo" src="../static/images/jungle.png" alt="jungle logo" />
       </div>
-      
-      <!--model threshold slider-->
-
-      <style>
-        .slidecontainer {
-          width: 50%;
-        }
-        
-        .slider {
-          -webkit-appearance: none;
-          width: 80%;
-          height: 15px;
-          border-radius: 5px;
-          background: #d3d3d3;
-          outline: none;
-          opacity: 0.7;
-          -webkit-transition: .2s;
-          transition: opacity .2s;
-        }
-        
-        .slider:hover {
-          opacity: 1;
-        }
-        
-        .slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          background: #04AA6D;
-          cursor: pointer;
-        }
-        
-        .slider::-moz-range-thumb {
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          background: #04AA6D;
-          cursor: pointer;
-        }
-
-
-
-        /* The switch - the box around the slider */
-        .switch {
-          position: relative;
-          display: inline-block;
-          width: 60px;
-          height: 34px;
-        }
-
-        /* Hide default HTML checkbox */
-        .switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        /* The slider */
-        .slider_switch {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #ccc;
-          -webkit-transition: .4s;
-          transition: .4s;
-        }
-
-        .slider_switch:before {
-          position: absolute;
-          content: "";
-          height: 26px;
-          width: 26px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          -webkit-transition: .4s;
-          transition: .4s;
-        }
-
-        input:checked + .slider_switch {
-          background-color: #2196F3;
-        }
-
-        input:focus + .slider_switch {
-          box-shadow: 0 0 1px #2196F3;
-        }
-
-        input:checked + .slider_switch:before {
-          -webkit-transform: translateX(26px);
-          -ms-transform: translateX(26px);
-          transform: translateX(26px);
-        }
-
-        /* Rounded sliders */
-        .slider_switch.round {
-          border-radius: 34px;
-        }
-
-        .slider_switch.round:before {
-          border-radius: 50%;
-        }
-        </style>
-      <div>
-      
+      <div class="intro-container">
+        <h1 class="title-text">Dynamic Sign Language Detection Game</h1>
+        <p class="description-text">
+          An LSTM keypoint detection model by Zhili and Pei Zhen
+        </p>
+      </div>
+    </div>
+    <div>
 
       <!-- Rounded switch -->
-      <p>
-        Display Keypoints
-        <label class="switch">
-          <input type="checkbox" id="switch1" onclick="switched(this)" checked>
-          <span class="slider_switch round"></span>
-        </label></p>
+      <div class="toggle-container">
+        <div class="slidecontainer">
+          <p>
+            <a class="ui-tooltip"
+              title="Adjust Minimum Threshold for LSTM model to display animal emoji on webcam screen.">
+              <span style="cursor: help;">LSTM Model Detection Threshold</span></a>
+
+            = <span id="demo"></span>
+          </p>
+          <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="myRange">
+        </div>
+        <div class="switch-container">
+          <p class="switch-label">Display Keypoints</p>
+          <label class="switch">
+            <input type="checkbox" id="switch1" onclick="switched(this)" checked>
+            <span class="slider_switch round"></span>
+          </label>
+        </div>
       </div>
-      
-      </a>
+    </div>
 
-  
-
-      <div class="slidecontainer">
-        <p>
-          <a class="ui-tooltip" title="Adjust Minimum Threshold for LSTM model to display animal emoji on webcam screen.">
-          <span style="cursor: help;">LSTM Model Detection Threshold</span></a>
-          
-          = <span id="demo"></span></p>
-
-        <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="myRange">
-      
-      </div>
-
-      
-      <!--<div class="slidecontainer">
+    <!--<div class="slidecontainer">
         <p>Mediapipe Keypoint Detection Confidence = <span id="demo1"></span>
         <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider1" id="myRange1">
       </p>
       </div>-->
 
-
-
-      <!-- Functions for jQuery AJAX -->
-      <script>
-
+    <!-- Functions for jQuery AJAX -->
+    <script>
       //Toggle Keypoints Switch
-      var switchValues = { };
-      function switched (switchElement) {
+      var switchValues = {};
+      function switched(switchElement) {
         switchValues[switchElement.id] = switchElement.checked;
         //console.log(switchValues[switchElement.id]);
-        var toggle_value = [{"toggle":switchValues[switchElement.id]}];
+        var toggle_value = [{ "toggle": switchValues[switchElement.id] }];
         $.ajax({
-            type: "POST",
-            url: "/process_toggle_value",
-            data: JSON.stringify(toggle_value),
-            contentType: "application/json",
-            dataType: 'json', 
-            success: function(result) {
+          type: "POST",
+          url: "/process_toggle_value",
+          data: JSON.stringify(toggle_value),
+          contentType: "application/json",
+          dataType: 'json',
+          success: function (result) {
             console.log("Result:");
             console.log(result);
-            }
-          })
+          }
+        })
       }
 
       //LSTM Model slider AJAX
@@ -214,23 +89,21 @@
       var output = document.getElementById("demo");
       output.innerHTML = slider.value;
 
-      slider.oninput = function() {
+      slider.oninput = function () {
         output.innerHTML = this.value;
-        var slider_value = [{"slider":this.value}];
+        var slider_value = [{ "slider": this.value }];
         $.ajax({
-            type: "POST",
-            url: "/process_slider_value",
-            data: JSON.stringify(slider_value),
-            contentType: "application/json",
-            dataType: 'json', 
-            success: function(result) {
+          type: "POST",
+          url: "/process_slider_value",
+          data: JSON.stringify(slider_value),
+          contentType: "application/json",
+          dataType: 'json',
+          success: function (result) {
             console.log("Result:");
             console.log(result);
-            }
-          });
+          }
+        });
       }
-
-
       //Mediapipe Keypoint Detection Confidence Slider AJAX
       /*var slider1 = document.getElementById("myRange1");
       var output1 = document.getElementById("demo1");
@@ -244,34 +117,26 @@
             url: "/process_mediapipe_slider_value1",
             data: JSON.stringify(mediapipe_slider_value1),
             contentType: "application/json",
-            dataType: 'json', 
+            dataType: 'json',
             success: function(result) {
             console.log("Result:");
             console.log(result);
             }
           });
       }*/
-      </script> 
-
-
-      
-
-
-      <!--<div>
+    </script>
+    <!--<div>
         <label for="points">Model Threshold:</label>
         <form method="POST" action="slider">
           <input type="range" id="points" min="0" max="1" value = 0.5 step = 0.1 name="model_threshold_slider" oninput="this.nextElementSibling.value = this.value"/>
           <input type="submit" value="submit" />
-          
       </form>
       </div>-->
-
-      <!--
+    <!--
       <div class="slidecontainer">
         <label> Year: <span id="Year"></span></label>
         <input type="range" min="1998" max="2019" value="2014" class="slider" id="year_range" step="1">
     </div>
-      
       <script>
         var slider3 = $("#year_range");
         $("#Year").html(slider3.val());
@@ -281,110 +146,54 @@
         })
       </script>
 -->
-      <div class="body-container">
-        <div class="video-container">
-          <img src="{{ url_for('video_feed') }}" width="80%" />
+    <div class="video-container">
+      <img src="{{ url_for('video_feed') }}" width="70%" />
+    </div>
+  </div>
+
+  <div class="learning-container">
+    <div class="app-bar" style="margin-top:40px">
+      <div class="intro-container">
+        <h1 class="title-text">Learn ASL Animal Dynamic Sign Language</h1>
+        <p class="description-text">
+          Hover over the animal logos to see how to perform an ASL Animal Sign
+        </p>
+      </div>
+    </div>
+    <div class="image-wrapper">
+      <div class="emoji-container">
+        <div class="imageBox">
+          <img src="../static/images/bird.png" alt="Bird" style="width:80px; margin: 20px">
+          <div class="hoverImg">
+            <img src="../static/gif/bird.gif" alt="Bird gif" style="width:80%; border-radius: 25px;">
+          </div>
+        </div>
+        <div class="imageBox">
+          <img src="../static/images/butterfly.png" alt="Butterfly" style="width:80px; margin: 20px">
+          <div class="hoverImg">
+            <img src="../static/gif/butterfly.gif" alt="Butterfly gif" style="width:80%; border-radius: 25px;">
+          </div>
+        </div>
+        <div class="imageBox">
+          <img src="../static/images/cow.png" alt="Cow gif" style="width:80px; margin: 20px">
+          <div class="hoverImg">
+            <img src="../static/gif/cow.gif" alt="Cow gif" style="width:80%; border-radius: 25px;">
+          </div>
+        </div>
+        <div class="imageBox">
+          <img src="../static/images/elephant.png" alt="Elephant" style="width:80px; margin: 20px">
+          <div class="hoverImg">
+            <img src="../static/gif/elephant.gif" alt="Elephant gif" style="width:80%; border-radius: 25px;">
+          </div>
+        </div>
+        <div class="imageBox">
+          <img src="../static/images/gorilla.png" alt="Gorilla" style="width:80px; margin: 20px">
+          <div class="hoverImg">
+            <img src="../static/gif/gorilla.gif" alt="Gorilla gif" style="width:80%; border-radius: 25px;">
+          </div>
         </div>
       </div>
-      <style>
-        .imageBoxleft {
-          width:50%;
-          position: relative;
-          float: left;
-
-        }
-  
-        .imageBoxleft .hoverImg {
-          position: absolute;
-          left: 0;
-          top: 0;
-
-          display: none;
-        }
-  
-        .imageBoxleft:hover .hoverImg {
-          height:100%;
-          display: block;
-          
-        }
-
-        .imageBoxright {
-          width:50%;
-          position: relative;
-          float: right;
-        }
-  
-        .imageBoxright .hoverImg {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width:100%;
-          
-          display: none;
-        }
-  
-        .imageBoxright:hover .hoverImg {
-          
-          display: block;
-        }
-
-  </style>
-  
-  <div class="intro-container">
-    <h1 class="title-text">Learn ASL Animal Dynamic Sign Language</h1>
-    <p class="description-text">
-      Hover over the animal logos to see how to perform an ASL Animal Sign
-    </p>
-  </div>
-
-  <div>
-    <div class="imageBoxleft">
-      <div class="space">
-        <img src="../static/images/bird.png" alt="Bird" style="width:30%" >
-      </div>
-      <div class="hoverImg">
-        <img src="../static/gif/bird.gif" alt="Bird gif"style="width:80%; border-radius: 25px;" >
-      </div>
     </div>
-    <div class="imageBoxright">
-      <div class="space">
-        <img src="../static/images/butterfly.png" alt="Butterfly" style="width:30%" >
-      </div>
-      <div class="hoverImg">
-        <img src="../static/gif/butterfly.gif" alt="Butterfly gif"style="width:80%; border-radius: 25px;">
-      </div>
-    </div>
+</body>
 
-    <div class="imageBoxleft">
-      <div class="space">
-        <img src="../static/images/cow.png" alt="Cow gif" style="width:30%" >
-      </div>
-      <div class="hoverImg">
-        <img src="../static/gif/cow.gif" alt="Cow gif"style="width:80%; border-radius: 25px;">
-      </div>
-    </div>
-    <div class="imageBoxright">
-      <div class="space">
-        <img src="../static/images/elephant.png" alt="Elephant" style="width:30%" >
-      </div>
-      <div class="hoverImg">
-        <img src="../static/gif/elephant.gif" alt="Elephant gif"style="width:80%; border-radius: 25px;">
-      </div>
-  </div>
-  <div class="imageBoxleft">
-    <div class="space">
-      <img src="../static/images/gorilla.png" alt="Gorilla" style="width:30%" >
-    </div>
-    <div class="hoverImg">
-      <img src="../static/gif/gorilla.gif" alt="Gorilla gif"style="width:80%; border-radius: 25px;">
-    </div>
-  </div>
-
-
-
-    </div>
-
-   
-
-  </body>
 </html>
