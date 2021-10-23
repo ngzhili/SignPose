@@ -254,7 +254,7 @@
       </script> 
 
 
-
+      
 
 
       <!--<div>
@@ -286,6 +286,105 @@
           <img src="{{ url_for('video_feed') }}" width="80%" />
         </div>
       </div>
+      <style>
+        .imageBoxleft {
+          width:50%;
+          position: relative;
+          float: left;
+
+        }
+  
+        .imageBoxleft .hoverImg {
+          position: absolute;
+          left: 0;
+          top: 0;
+
+          display: none;
+        }
+  
+        .imageBoxleft:hover .hoverImg {
+          height:100%;
+          display: block;
+          
+        }
+
+        .imageBoxright {
+          width:50%;
+          position: relative;
+          float: right;
+        }
+  
+        .imageBoxright .hoverImg {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width:100%;
+          
+          display: none;
+        }
+  
+        .imageBoxright:hover .hoverImg {
+          
+          display: block;
+        }
+
+  </style>
+  
+  <div class="intro-container">
+    <h1 class="title-text">Learn ASL Animal Dynamic Sign Language</h1>
+    <p class="description-text">
+      Hover over the animal logos to see how to perform an ASL Animal Sign
+    </p>
+  </div>
+
+  <div>
+    <div class="imageBoxleft">
+      <div class="space">
+        <img src="../static/images/bird.png" alt="Bird" style="width:30%" >
+      </div>
+      <div class="hoverImg">
+        <img src="../static/gif/bird.gif" alt="Bird gif"style="width:80%; border-radius: 25px;" >
+      </div>
     </div>
+    <div class="imageBoxright">
+      <div class="space">
+        <img src="../static/images/butterfly.png" alt="Butterfly" style="width:30%" >
+      </div>
+      <div class="hoverImg">
+        <img src="../static/gif/butterfly.gif" alt="Butterfly gif"style="width:80%; border-radius: 25px;">
+      </div>
+    </div>
+
+    <div class="imageBoxleft">
+      <div class="space">
+        <img src="../static/images/cow.png" alt="Cow gif" style="width:30%" >
+      </div>
+      <div class="hoverImg">
+        <img src="../static/gif/cow.gif" alt="Cow gif"style="width:80%; border-radius: 25px;">
+      </div>
+    </div>
+    <div class="imageBoxright">
+      <div class="space">
+        <img src="../static/images/elephant.png" alt="Elephant" style="width:30%" >
+      </div>
+      <div class="hoverImg">
+        <img src="../static/gif/elephant.gif" alt="Elephant gif"style="width:80%; border-radius: 25px;">
+      </div>
+  </div>
+  <div class="imageBoxleft">
+    <div class="space">
+      <img src="../static/images/gorilla.png" alt="Gorilla" style="width:30%" >
+    </div>
+    <div class="hoverImg">
+      <img src="../static/gif/gorilla.gif" alt="Gorilla gif"style="width:80%; border-radius: 25px;">
+    </div>
+  </div>
+
+
+
+    </div>
+
+   
+
   </body>
 </html>
