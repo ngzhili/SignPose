@@ -69,6 +69,10 @@ body {
 
 .slidecontainer {
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .slider {
@@ -109,7 +113,7 @@ body {
 .toggle-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   min-width: 900px;
   margin-bottom: 12px;
@@ -117,8 +121,8 @@ body {
 .switch-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
 }
 .switch-label {
   font-size: 15px;
@@ -218,4 +222,6 @@ input:checked + .slider_switch:before {
   align-items: center;
   background-image: url("../images/pink-background.png");
   background-size: cover;
+}
+.prompt-container {
 }

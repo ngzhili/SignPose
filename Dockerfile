@@ -13,6 +13,7 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 RUN pip3 install tensorflow==2.4.1
+RUN pip3 install tensorflow-gpu cudatoolkit==11.0
 
 COPY . .
 
