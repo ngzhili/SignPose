@@ -35,6 +35,18 @@
     </div>
     <div>
 
+    <script>
+      /*fetch(`/random_action`)
+      .then(function (response) {
+          return response.text();
+      }).then(function (text) {
+          console.log('GET response text:');
+          console.log(text); 
+      });*/
+
+
+    </script>
+
       <!-- Rounded switch -->
       <div class="toggle-container">
         <div class="slidecontainer">
@@ -54,7 +66,16 @@
             <span class="slider_switch round"></span>
           </label>
         </div>
+
+        
       </div>
+
+      <div>
+        <p style="cursor: help;">Sign this Animal:<span id="{{ url_for('random_action') }}" method="post"></span> </p>
+      </div>
+
+
+
     </div>
 
     <!--<div class="slidecontainer">
@@ -147,8 +168,10 @@
       </script>
 -->
     <div class="video-container">
-      <img src="{{ url_for('video_feed') }}" width="70%" />
+      <img src="{{ url_for('video_feed') }}" width="70%" alt='Webcam display'/>
     </div>
+    
+
   </div>
 
   <div class="learning-container">
