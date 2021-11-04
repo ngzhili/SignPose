@@ -94,26 +94,14 @@ def get_current_score():
     return jsonify(current_score)
 
 
-#@app.route("/reset_score", methods=['GET', 'POST'])
+@app.route('/reset_score')
 def reset_score():
     global current_score
-    if "reset" in request.form['reset_button']:
-        current_score = 0
-        print('current_score',current_score)
-    else:
-        pass
 
-    
-'''
-    if request.method == 'POST':
-        if request.form['reset_button'] == 'reset':
-            current_score = 0
-            print('current_score',current_score)
-        else:
-            pass # unknown
-'''
+    current_score = 0
+    print('current_score',current_score)
 
-    
+    return("nothing")
 
 
 ''' ============== Build Mediapipe Model ============== '''

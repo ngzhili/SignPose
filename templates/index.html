@@ -61,8 +61,10 @@
             <div class="action-wrapper">
               <p id="currentScore" class="target-animal">{{current_score}}</p>
             </div>
-            <input type="submit" method="post" name="reset_button" value="reset">
             
+            <form>
+              <a href=# id=reset_button><button class='btn btn-default'>reset</button></a>
+          </form>
           </div>
         </div>
 
@@ -91,6 +93,28 @@
   
       </div>
     </div>
+
+    
+    <div class='container'>
+            
+
+    </div>
+
+     <!-- Score Reset Button -->
+    <script type=text/javascript>
+
+      $(function() {
+        $('a#reset_button').on('click', function(e) {
+          e.preventDefault()
+          $.getJSON('/reset_score',
+              function(data) {
+            //do nothing
+          });
+          getCurrentScore();
+          return false;
+        });
+      });
+      </script>
 
     <!--<div class="slidecontainer">
         <p>Mediapipe Keypoint Detection Confidence = <span id="demo1"></span>
@@ -190,6 +214,11 @@
           }
         });
       }
+
+
+      
+
+
       //Mediapipe Keypoint Detection Confidence Slider AJAX
       /*var slider1 = document.getElementById("myRange1");
       var output1 = document.getElementById("demo1");
