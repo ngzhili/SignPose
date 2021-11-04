@@ -3,6 +3,7 @@ import cv2
 import time
 import sys
 
+import random
 import numpy as np
 import os
 from matplotlib import pyplot as plt
@@ -20,7 +21,7 @@ from mediapipe_functions import mediapipe_detection, draw_landmarks, draw_styled
 video_id = 'no'
 
 app=Flask(__name__)
-
+'''
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
@@ -30,12 +31,15 @@ def index():
             #video_id = 'lstm'
 
     """Video streaming home page."""
-    return render_template('index.html')
-
+    return render_template('index.html', current_action=current_action)
+'''
 # Initialise detection confidence
 lstm_threshold = 0.5
 toggle_keypoints = True
 mediapipe_detection_confidence = 0.5
+
+
+
 
 @app.route('/process_toggle_value', methods=['POST', 'GET'])
 def process_toggle_value():
@@ -61,6 +65,22 @@ def process_slider_value():
         print('LSTM Detection Threshold:',lstm_threshold)
     results = {'processed': 'true'}
     return jsonify(results)
+
+
+@app.route("/random_action", methods=['GET'])
+def random_action():
+    global current_action
+    if request.method == 'GET': # GET request
+        current_action = random.choice(actions_list)
+        print('Current Action:',current_action)
+
+        results= {'processed':current_action}
+        
+    return jsonify(results) #str(current_action)
+
+
+
+
 
 '''
 @app.route('/process_mediapipe_slider_value1', methods=['POST', 'GET'])
@@ -91,18 +111,34 @@ mp_drawing = mp.solutions.drawing_utils # Drawing utilities
 #actions = np.array(['Alligator','Butterfly','Cow','Elephant','Gorilla'])
 
 actions = np.array(['Bird','Butterfly','Cow','Elephant','Gorilla','No Action'])
+actions_list = list(actions)
+current_action = random.choice(actions_list)
+
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+
+    #if request.method == 'POST':
+        #if request.form.get('LSTM_model') == 'start_detection':
+            #print('hello123')
+            #video_id = 'lstm'
+
+    """Video streaming home page."""
+    return render_template('index.html')
 
 
 label_map = {label:num for num, label in enumerate(actions)} #create label map dictionary
 
 # Build Model
-model = Sequential()
-model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662))) #each video has input shape of 30 frames of 1662 keypoints: X.shape
-model.add(LSTM(128, return_sequences=True, activation='relu'))
-model.add(LSTM(64, return_sequences=False, activation='relu')) #next layer is a dense layer so we do not return sequences here
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(actions.shape[0], activation='softmax'))
+#model = Sequential()
+#model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662))) #each video has input shape of 30 frames of 1662 keypoints: X.shape
+#model.add(LSTM(128, return_sequences=True, activation='relu'))
+#model.add(LSTM(64, return_sequences=False, activation='relu')) #next layer is a dense layer so we do not return sequences here
+#model.add(Dense(64, activation='relu'))
+#model.add(Dense(32, activation='relu'))
+#model.add(Dense(actions.shape[0], activation='softmax'))
 
 
 # Build Model Architecture (Body pose and Handpose only)
@@ -142,6 +178,9 @@ def gen():
     cap = cv2.VideoCapture(0)
     sent =''
 
+    global current_action
+    print('Current Action:',current_action)
+
     global mediapipe_detection_confidence
     print(mediapipe_detection_confidence)
     
@@ -166,6 +205,8 @@ def gen():
                 image, results = mediapipe_detection(image, holistic)
                 #print(results)
 
+                
+
                 # Draw landmarks
                 if toggle_keypoints:
                     draw_styled_landmarks(image, results)
@@ -185,8 +226,19 @@ def gen():
                     
                 #3. Viz logic
                     if np.unique(predictions[-10:])[0]==np.argmax(res): 
+
+                        if res[np.argmax(res)] > threshold and actions[np.argmax(res)] == current_action:
+                            
+                            print('Correct!')
+                            #current_action = random.choice(actions_list)
+                            random_action()
+                            print('Current Action:',current_action)
+
+
                         if res[np.argmax(res)] > threshold and actions[np.argmax(res)] != 'No Action': 
                             #print(actions[np.argmax(res)])
+                            
+                            
 
                             # Add overlay image if the most confident is more than the threshold
                             add_image(image, results, str(actions[np.argmax(res)]))
@@ -220,10 +272,10 @@ def gen():
 @app.route('/video_feed')
 def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
+    
 
     return Response(gen(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 
 
