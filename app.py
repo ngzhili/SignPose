@@ -70,7 +70,6 @@ def process_slider_value():
     return jsonify(results)
 
 
-@socketio.on('generate new action')
 def random_action():
     global current_action
     newAction = random.choice(actions_list)
@@ -78,6 +77,12 @@ def random_action():
         newAction = random.choice(actions_list)
     current_action = newAction
     print('Current Action:', current_action)
+    return current_action
+
+
+@socketio.on('generate new action')
+def emit_new_action():
+    random_action()
     socketio.emit('new action', {'data': current_action})
 
 
@@ -88,7 +93,7 @@ def get_current_action():
 
 @app.route("/get_next_action", methods=['GET'])
 def get_next_action():
-    random_action()
+    current_action = random_action()
     return jsonify(current_action)
 
 
@@ -241,7 +246,7 @@ def gen():
 
                             print('Correct!')
                             #current_action = random.choice(actions_list)
-                            random_action()
+                            emit_new_action()
                             print('Current Action:', current_action)
 
                         if res[np.argmax(res)] > threshold and actions[np.argmax(res)] != 'No Action':

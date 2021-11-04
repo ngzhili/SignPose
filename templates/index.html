@@ -114,6 +114,9 @@
           type: "GET",
           url: "/get_next_action",
           dataType: 'json',
+          success: function (result) {
+            $('#currentAction').html(result);
+          }
         })
       }
 
