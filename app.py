@@ -1,5 +1,7 @@
 from mediapipe_functions import mediapipe_detection, draw_landmarks, draw_styled_landmarks, extract_keypoints, add_image, prob_viz
 from flask import Flask, render_template, Response, request, json, jsonify
+from flask_socketio import SocketIO
+
 import cv2
 import time
 import sys
@@ -21,6 +23,8 @@ sys.path.append('./mediapipe_functions.py')
 video_id = 'no'
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 '''
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -66,14 +70,23 @@ def process_slider_value():
     return jsonify(results)
 
 
-@app.route("/random_action", methods=['GET'])
+@socketio.on('generate new action')
 def random_action():
     global current_action
     current_action = random.choice(actions_list)
     print('Current Action:', current_action)
+    socketio.emit('new action', {'data': current_action})
 
-    results = {'processed': current_action}
-    return current_action
+
+@app.route("/get_current_action", methods=['GET'])
+def get_current_action():
+    return jsonify(current_action)
+
+
+@app.route("/get_next_action", methods=['GET'])
+def get_next_action():
+    random_action()
+    return jsonify(current_action)
 
 
 '''
@@ -104,7 +117,8 @@ mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
 
 actions = np.array(['Bird', 'Butterfly', 'Cow',
                    'Elephant', 'Gorilla', 'No Action'])
-actions_list = list(actions)
+actions_list = list(['Bird', 'Butterfly', 'Cow',
+                     'Elephant', 'Gorilla'])
 current_action = random.choice(actions_list)
 
 
@@ -270,4 +284,4 @@ def video_feed():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app)

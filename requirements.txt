@@ -48,5 +48,5 @@ typing-extensions==3.7.4.3
 urllib3==1.26.7
 Werkzeug==2.0.2
 wrapt==1.12.1
-Flask_SocketIO
+flask_socketio
 python-socketio

@@ -17,6 +17,16 @@
   <meta name="description"
     content="An interactive dynamic sign language app created using LSTM keypoint detection, created by Zhili and Pei Zhen." />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous">
+    </script>
+  <script type="text/javascript" charset="utf-8">
+    var socket = io();
+    socket.on('connect', function () {
+      socket.emit('my event', { data: 'I\'m connected!' });
+    });
+  </script>
 
 </head>
 
@@ -51,7 +61,10 @@
       <div class="toggle-container">
         <div class="prompt-container">
           <p class="animal-label">Sign this animal:</p>
-          <h3 class="target-animal">{{current_action}}</h3>
+          <div class="action-wrapper">
+            <p id="currentAction" class="target-animal">{{current_action}}</p>
+            <img class="next-icon" src="../static/images/right-arrow.png" alt="next" onclick="getNextAnimal()">
+          </div>
         </div>
         <div class="slidecontainer">
           <p>
@@ -84,16 +97,36 @@
     <!-- Functions for jQuery AJAX -->
     <script>
       // Current Animal
+      var action = document.getElementById("currentAction");
+
       function getCurrentAnimal() {
         $.ajax({
           type: "GET",
-          url: "/random_action",
-          data: JSON.stringify(current_action),
+          url: "/get_current_action",
           dataType: 'json',
           success: function (result) {
-            $('#randomAnimal').html(result);
+            $('#currentAction').html(result);
           }
         })
+      }
+      function getNextAnimal() {
+        $.ajax({
+          type: "GET",
+          url: "/get_next_action",
+          dataType: 'json',
+        })
+      }
+
+      $(document).ready(function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port)
+        socket.on('new action', function () {
+          getCurrentAnimal()
+        })
+      })
+
+      // Call next animal
+      function nextAnimal() {
+        getNextAnimal()
       }
 
       //Toggle Keypoints Switch
