@@ -60,12 +60,26 @@
       <!-- Rounded switch -->
       <div class="toggle-container">
         <div class="prompt-container">
-          <p class="animal-label">Sign this animal:</p>
-          <div class="action-wrapper">
-            <p id="currentAction" class="target-animal">{{current_action}}</p>
-            <img class="next-icon" src="../static/images/right-arrow.png" alt="next" onclick="getNextAnimal()">
+          <div>
+            <p class="animal-label">Sign this animal:</p>
+            <div class="action-wrapper">
+              <p id="currentAction" class="target-animal">{{current_action}}</p>
+            
+              <img class="next-icon" src="../static/images/right-arrow.png" alt="next" onclick="getNextAnimal()">
+            </div>
+          </div>
+          <div>
+            <p class="score-label">Score:</p>
+            <div class="action-wrapper">
+              <p id="currentScore" class="target-animal">{{current_score}}</p>
+            </div>
+            <input type="submit" method="post" name="reset_button" value="reset">
+            
           </div>
         </div>
+
+
+
         <div class="slidecontainer">
           <p>
             <a class="ui-tooltip"
@@ -74,15 +88,19 @@
 
             = <span id="demo"></span>
           </p>
-          <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="myRange">
+          <input type="range" min="0" max="1" value="0.9" step="0.05" class="slider" id="myRange">
         </div>
         <div class="switch-container">
-          <p class="switch-label">Display Keypoints</p>
+          <a class="ui-tooltip"
+              title="Toggle Keypoint display on webcam screen.">
+
+          <p class="switch-label" style="cursor: help;">Display Keypoints</p></a>
           <label class="switch">
             <input type="checkbox" id="switch1" onclick="switched(this)" checked>
             <span class="slider_switch round"></span>
           </label>
         </div>
+        
 
 
       </div>
@@ -98,6 +116,8 @@
     <script>
       // Current Animal
       var action = document.getElementById("currentAction");
+      var score = document.getElementById("currentScore");
+      console.log(score);
 
       function getCurrentAnimal() {
         $.ajax({
@@ -120,10 +140,23 @@
         })
       }
 
+      function getCurrentScore() {
+        $.ajax({
+          type: "GET",
+          url: "/get_current_score",
+          dataType: 'json',
+          success: function (result) {
+            $('#currentScore').html(result);
+          }
+        })
+      }
+
+
       $(document).ready(function () {
         var socket = io.connect('http://' + document.domain + ':' + location.port)
         socket.on('new action', function () {
           getCurrentAnimal()
+          getCurrentScore()
         })
       })
 
@@ -145,8 +178,8 @@
           contentType: "application/json",
           dataType: 'json',
           success: function (result) {
-            console.log("Result:");
-            console.log(result);
+            //console.log("Result:");
+            //console.log(result);
           }
         })
       }
@@ -166,8 +199,8 @@
           contentType: "application/json",
           dataType: 'json',
           success: function (result) {
-            console.log("Result:");
-            console.log(result);
+            //console.log("Result:");
+            //console.log(result);
           }
         });
       }

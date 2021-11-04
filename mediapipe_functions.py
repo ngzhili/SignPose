@@ -208,3 +208,86 @@ def prob_viz(res, actions, input_frame, colors):
 
         #cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
     return output_frame
+
+'''
+def display_correct_screen(image):
+    width = image.shape[1]#480
+    height= image.shape[0]#640
+    alpha = 0.5
+
+    overlay = image.copy()
+	
+
+    cv2.rectangle(overlay, (0, 0), (width, height),
+		(0, 255, 0), -1)
+    
+    # apply the overlay
+    cv2.addWeighted(overlay, alpha, image, 1 - alpha,
+		0, image)
+'''
+    
+
+def overlay_transparent(background, overlay, x, y):
+        
+        # height and width of background image
+        background_width = background.shape[1]
+        background_height = background.shape[0]
+        
+        # if coordinate x and y is larger than background width and height, stop code
+        if x >= background_width or y >= background_height:
+            return background
+
+        
+        
+        # height and width of overlay image
+        h, w = overlay.shape[0], overlay.shape[1]
+
+        #print('x:',x)
+        #print('overlay_width:',w)
+        #print('background_width:',background_width)
+       
+
+        #print('y:',y)
+        #print('overlay_height:',h)
+        #print('background_height:',background_width)
+        
+
+        if w >= background_width:
+            return background
+        if h >= background_height:
+            return background
+        
+        # if coordinate x + width of overlay is larger than background width and height, stop code
+        if x + w > background_width:
+            #w = background_width - x
+            #overlay = overlay[:, :w]
+            return background
+        if x - w < 2:
+            #w = background_width - x
+            #overlay = overlay[:, :w]
+            return background
+        if y + h > background_height:
+            #h = background_height - y
+            #overlay = overlay[:h]
+            return background
+        
+        if y - h < 2:
+            #h = background_height - y
+            #overlay = overlay[:h]
+            return background
+        
+        if overlay.shape[2] < 4:
+            overlay = np.concatenate(
+                [
+                    overlay,
+                    np.ones((overlay.shape[0], overlay.shape[1], 1), dtype = overlay.dtype) * 255
+                ],
+                axis = 2,
+            )
+
+        overlay_image = overlay[..., :3]
+        mask = overlay[..., 3:] / 255.0
+
+        background[y:y+h, x:x+w] = (1.0 - mask) * background[y:y+h, x:x+w] + mask * overlay_image
+
+        return background

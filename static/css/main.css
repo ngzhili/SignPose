@@ -259,3 +259,8 @@ input:checked + .slider_switch:before {
 .next-icon:hover {
   opacity: 50%;
 }
+
+.score-label {
+  margin: 0;
+  padding: 0;
+}
