@@ -267,6 +267,13 @@ def gen():
 
                             current_score += 1
 
+                            if len(sentence) > 0:
+                                # if action is not in the last sentence, then we append the last action to the sentence
+                                if actions[np.argmax(res)] != sentence[-1]:
+                                    sentence.append(actions[np.argmax(res)])
+                            else:
+                                sentence.append(actions[np.argmax(res)])
+
                         if res[np.argmax(res)] > threshold and actions[np.argmax(res)] != 'No Action':
                             # print(actions[np.argmax(res)])
 
@@ -274,12 +281,7 @@ def gen():
                             add_image(image, results, str(
                                 actions[np.argmax(res)]))
 
-                            if len(sentence) > 0:
-                                # if action is not in the last sentence, then we append the last action to the sentence
-                                if actions[np.argmax(res)] != sentence[-1]:
-                                    sentence.append(actions[np.argmax(res)])
-                            else:
-                                sentence.append(actions[np.argmax(res)])
+                            
 
                     if len(sentence) > 5:
                         sentence = sentence[-5:]

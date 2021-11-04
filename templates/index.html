@@ -43,20 +43,8 @@
         </p>
       </div>
     </div>
+
     <div>
-
-      <script>
-        /*fetch(`/random_action`)
-        .then(function (response) {
-            return response.text();
-        }).then(function (text) {
-            console.log('GET response text:');
-            console.log(text);
-        });*/
-
-
-      </script>
-
       <!-- Rounded switch -->
       <div class="toggle-container">
         <div class="prompt-container">
@@ -100,9 +88,7 @@
             <span class="slider_switch round"></span>
           </label>
         </div>
-        
-
-
+  
       </div>
     </div>
 
@@ -117,7 +103,7 @@
       // Current Animal
       var action = document.getElementById("currentAction");
       var score = document.getElementById("currentScore");
-      console.log(score);
+      
 
       function getCurrentAnimal() {
         $.ajax({
@@ -247,7 +233,7 @@
       </script>
 -->
     <div class="video-container">
-      <img src="{{ url_for('video_feed') }}" width="70%" alt='Webcam display' />
+      <img src="{{ url_for('video_feed') }}" width="100%" alt='Webcam display' />
     </div>
   </div>
 
