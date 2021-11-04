@@ -73,7 +73,10 @@ def process_slider_value():
 @socketio.on('generate new action')
 def random_action():
     global current_action
-    current_action = random.choice(actions_list)
+    newAction = random.choice(actions_list)
+    while newAction == current_action:
+        newAction = random.choice(actions_list)
+    current_action = newAction
     print('Current Action:', current_action)
     socketio.emit('new action', {'data': current_action})
 
