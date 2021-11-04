@@ -35,23 +35,23 @@
     </div>
     <div>
 
-    <script>
-      /*fetch(`/random_action`)
-      .then(function (response) {
-          return response.text();
-      }).then(function (text) {
-          console.log('GET response text:');
-          console.log(text); 
-      });*/
+      <script>
+        /*fetch(`/random_action`)
+        .then(function (response) {
+            return response.text();
+        }).then(function (text) {
+            console.log('GET response text:');
+            console.log(text);
+        });*/
 
 
-    </script>
+      </script>
 
       <!-- Rounded switch -->
       <div class="toggle-container">
         <div class="prompt-container">
-          <p class="switch-label">Sign this animal:</p>
-          
+          <p class="animal-label">Sign this animal:</p>
+          <h3 class="target-animal">{{current_action}}</h3>
         </div>
         <div class="slidecontainer">
           <p>
@@ -71,15 +71,8 @@
           </label>
         </div>
 
-        
+
       </div>
-
-      <div>
-        <p style="cursor: help;">Sign this Animal:<span id="{{ url_for('random_action') }}" method="post"></span> </p>
-      </div>
-
-
-
     </div>
 
     <!--<div class="slidecontainer">
@@ -90,6 +83,19 @@
 
     <!-- Functions for jQuery AJAX -->
     <script>
+      // Current Animal
+      function getCurrentAnimal() {
+        $.ajax({
+          type: "GET",
+          url: "/random_action",
+          data: JSON.stringify(current_action),
+          dataType: 'json',
+          success: function (result) {
+            $('#randomAnimal').html(result);
+          }
+        })
+      }
+
       //Toggle Keypoints Switch
       var switchValues = {};
       function switched(switchElement) {
@@ -172,10 +178,8 @@
       </script>
 -->
     <div class="video-container">
-      <img src="{{ url_for('video_feed') }}" width="70%" alt='Webcam display'/>
+      <img src="{{ url_for('video_feed') }}" width="70%" alt='Webcam display' />
     </div>
-    
-
   </div>
 
   <div class="learning-container">
