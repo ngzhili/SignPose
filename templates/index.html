@@ -43,68 +43,46 @@
         </p>
       </div>
     </div>
+    <!-- Rounded switch -->
+    <div class="toggle-container">
+      <div class="prompt-container">
+        <div>
+          <p class="animal-label">Sign this animal:</p>
+          <div class="action-wrapper">
+            <p id="currentAction" class="target-animal">{{current_action}}</p>
 
-    <div>
-      <!-- Rounded switch -->
-      <div class="toggle-container">
-        <div class="prompt-container">
-          <div>
-            <p class="animal-label">Sign this animal:</p>
-            <div class="action-wrapper">
-              <p id="currentAction" class="target-animal">{{current_action}}</p>
-            
-              <img class="next-icon" src="../static/images/right-arrow.png" alt="next" onclick="getNextAnimal()">
-            </div>
-          </div>
-          <div>
-            <p class="score-label">Score:</p>
-            <div class="action-wrapper">
-              <p id="currentScore" class="target-animal">{{current_score}}</p>
-            </div>
-            
-            <form>
-              <a href=# id=reset_button><button class='btn btn-default'>reset</button></a>
-          </form>
+            <img class="next-icon" src="../static/images/right-arrow.png" alt="next" onclick="getNextAnimal()">
           </div>
         </div>
+      </div>
 
-
-
-        <div class="slidecontainer">
-          <p>
-            <a class="ui-tooltip"
-              title="Adjust Minimum Threshold for LSTM model to display animal emoji on webcam screen.">
-              <span style="cursor: help;">LSTM Model Detection Threshold</span></a>
-
-            = <span id="demo"></span>
-          </p>
-          <input type="range" min="0" max="1" value="0.9" step="0.05" class="slider" id="myRange">
-        </div>
-        <div class="switch-container">
+      <div class="slidecontainer">
+        <p>
           <a class="ui-tooltip"
-              title="Toggle Keypoint display on webcam screen.">
+            title="Adjust Minimum Threshold for LSTM model to display animal emoji on webcam screen.">
+            <span style="cursor: help;">LSTM Model Detection Threshold</span></a>
 
-          <p class="switch-label" style="cursor: help;">Display Keypoints</p></a>
-          <label class="switch">
-            <input type="checkbox" id="switch1" onclick="switched(this)" checked>
-            <span class="slider_switch round"></span>
-          </label>
-        </div>
-  
+          = <span id="demo"></span>
+        </p>
+        <input type="range" min="0" max="1" value="0.9" step="0.05" class="slider" id="myRange">
+      </div>
+      <div class="switch-container">
+        <a class="ui-tooltip" title="Toggle Keypoint display on webcam screen.">
+
+          <p class="switch-label" style="cursor: help;">Display Keypoints</p>
+        </a>
+        <label class="switch">
+          <input type="checkbox" id="switch1" onclick="switched(this)" checked>
+          <span class="slider_switch round"></span>
+        </label>
       </div>
     </div>
 
-    
-    <div class='container'>
-            
-
-    </div>
-
-     <!-- Score Reset Button -->
+    <!-- Score Reset Button -->
     <script type=text/javascript>
 
       $(function() {
-        $('a#reset_button').on('click', function(e) {
+        $('#reset_button').on('click', function(e) {
           e.preventDefault()
           $.getJSON('/reset_score',
               function(data) {
@@ -127,7 +105,7 @@
       // Current Animal
       var action = document.getElementById("currentAction");
       var score = document.getElementById("currentScore");
-      
+
 
       function getCurrentAnimal() {
         $.ajax({
@@ -215,10 +193,6 @@
         });
       }
 
-
-      
-
-
       //Mediapipe Keypoint Detection Confidence Slider AJAX
       /*var slider1 = document.getElementById("myRange1");
       var output1 = document.getElementById("demo1");
@@ -261,6 +235,13 @@
         })
       </script>
 -->
+    <div class="score-wrapper">
+      <p class="score-label">Score: &nbsp;
+
+      <p>
+      <p id="currentScore" class="target-animal">{{current_score}}</p>
+      <img src="../static/images/reset.png" id="reset_button" alt="reset" class="reset-icon" />
+    </div>
     <div class="video-container">
       <img src="{{ url_for('video_feed') }}" width="100%" alt='Webcam display' />
     </div>
