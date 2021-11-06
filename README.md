@@ -1,5 +1,5 @@
-# LSTM_Keypoint_Sign_Language_Detector
-An LSTM Keypoint Model that detects real time dynamic sign language deployed on flask API.
+# SignPose
+An LSTM Keypoint Model deployed on Flask that detects real time dynamic sign language (ASL animals) on browser.
 
 ## Web Application deployed via flask
 
