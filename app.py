@@ -37,7 +37,7 @@ def process_toggle_value():
     global toggle_keypoints
     if request.method == "POST":
         toggle_data = request.get_json()
-        #print(toggle_data)
+        # print(toggle_data)
         # print(slider_data[0]['slider'])
         toggle_keypoints = toggle_data[0]['toggle']
         print('Toggle_keypoints:', toggle_keypoints)
@@ -51,7 +51,7 @@ def process_slider_value():
 
     if request.method == "POST":
         slider_data = request.get_json()
-        #print(slider_data)
+        # print(slider_data)
         # print(slider_data[0]['slider'])
         lstm_threshold = float(slider_data[0]['slider'])
         print('LSTM Detection Threshold:', lstm_threshold)
@@ -99,7 +99,7 @@ def reset_score():
     global current_score
 
     current_score = 0
-    print('current_score',current_score)
+    print('current_score', current_score)
 
     return("nothing")
 
@@ -177,6 +177,8 @@ colors = [(245, 221, 173), (245, 185, 265), (146, 235, 193),
 current_score = 0
 
 ''' ============== Mediapipe & LSTM Detection Code ============== '''
+
+
 def gen():
     # 1. New detection variables
 
@@ -188,14 +190,14 @@ def gen():
     """Video streaming generator function."""
     cap = cv2.VideoCapture(0)
     sent = ''
-    
+
     frame_count = 0
 
     #print('Current Action:', current_action)
 
     global current_score
     global mediapipe_detection_confidence
-    #print(mediapipe_detection_confidence)
+    # print(mediapipe_detection_confidence)
 
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
         # Read until video is completed
@@ -209,12 +211,8 @@ def gen():
 
             global toggle_keypoints
 
-
-
             ret, image = cap.read()
             if ret == True:
-
-                
 
                 # print('threshold',threshold)
 
@@ -241,14 +239,13 @@ def gen():
 
                 # 3. Viz logic
                     if np.unique(predictions[-10:])[0] == np.argmax(res):
-                        
 
                         ''' ===== Checks if Action is Correct ===== '''
                         if res[np.argmax(res)] > threshold and actions[np.argmax(res)] == current_action:
 
                             print('Correct!')
                             #current_action = random.choice(actions_list)
-                            frame_count = 20 #15
+                            frame_count = 10  # 15
 
                             emit_new_action()
                             #print('Current Action:', current_action)
@@ -269,8 +266,6 @@ def gen():
                             add_image(image, results, str(
                                 actions[np.argmax(res)]))
 
-                            
-
                     if len(sentence) > 5:
                         sentence = sentence[-5:]
 
@@ -280,29 +275,32 @@ def gen():
                 cv2.rectangle(image, (0, 0), (700, 40), (0, 60, 123), -1)
                 cv2.putText(image, ' '.join(
                     sentence), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-                
-                #display_correct_screen if frame_count is more than 0
+
+                # display_correct_screen if frame_count is more than 0
                 if frame_count > 0:
-                    #display_correct_screen(image)
-                    width = image.shape[1]#480
-                    height= image.shape[0]#640
+                    # display_correct_screen(image)
+                    width = image.shape[1]  # 480
+                    height = image.shape[0]  # 640
                     alpha = 0.5
 
                     overlay = image.copy()
-                    
+
                     cv2.rectangle(overlay, (0, 0), (width, height),
-                        (0, 255, 0), -1)
-                    
+                                  (144, 250, 144), -1)
+
                     # apply the overlay
                     cv2.addWeighted(overlay, alpha, image, 1 - alpha,
-                        0, image)
+                                    0, image)
 
-                    cv2.putText(image, 'CORRECT!', (width//2 -75, height//2 + 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, 'CORRECT!', (width//2 - 75, height//2 + 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-                    overlay= cv2.imread('./static/images/correct1.png', cv2.IMREAD_UNCHANGED)
-                    image = overlay_transparent(image, overlay, width//2 -35, height//2-70)
+                    overlay = cv2.imread(
+                        './static/images/correct1.png', cv2.IMREAD_UNCHANGED)
+                    image = overlay_transparent(
+                        image, overlay, width//2 - 35, height//2-70)
 
-                    frame_count-=1
+                    frame_count -= 1
 
                 # encode output image to bytes
                 frame = cv2.imencode('.jpg', image)[1].tobytes()
