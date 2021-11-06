@@ -155,6 +155,11 @@ body {
   margin-bottom: 12px;
   padding: 0;
 }
+@media screen and (max-width: 1024px) {
+  .toggle-container {
+    flex-direction: column-reverse;
+  }
+}
 .switch-container {
   display: flex;
   flex-direction: column;
@@ -245,7 +250,7 @@ input:checked + .slider_switch:before {
   display: none;
 }
 .imageBox:hover .hoverImg {
-  width: 65%;
+  width: 50%;
   margin-bottom: -40%;
   display: flex;
   justify-content: center;
@@ -271,6 +276,11 @@ input:checked + .slider_switch:before {
   background-color: rgb(250, 220, 196);
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+@media screen and (max-width: 1024px) {
+  .prompt-container {
+    margin: 24px 0;
+  }
 }
 .animal-label {
   margin: 0;
