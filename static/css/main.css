@@ -95,19 +95,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 60%;
   margin: 0;
   padding: 0;
 }
-@media screen and (max-height: 620px) {
-  .video-container {
-    width: 40%;
-  }
-}
-@media screen and (max-height: 500px) {
-  .video-container {
-    width: 35%;
-  }
+.video-feed {
+  object-fit: cover;
+  max-height: calc(100vh - 200px);
 }
 .slidecontainer {
   width: auto;
