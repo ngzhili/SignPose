@@ -99,7 +99,9 @@ reset_score_frame_count = 0
 def reset_score():
     global current_score
     global reset_score_frame_count
+    global sentence
     current_score = 0
+    sentence = []
 
     reset_score_frame_count = 10
     print('current_score', current_score)
@@ -181,12 +183,14 @@ current_score = 0
 
 ''' ============== Mediapipe & LSTM Detection Code ============== '''
 
+sentence = []
 
 def gen():
     # 1. New detection variables
 
     sequence = []
-    sentence = []
+    #sentence = []
+    global sentence
     predictions = []
     #threshold = 0.5
     #threshold = min_detection_confidence

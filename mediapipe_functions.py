@@ -206,7 +206,7 @@ def prob_viz(res, actions, input_frame, colors, threshold):
         #print(num, prob)
         if np.argmax(res) == num and  res[np.argmax(res)] >= threshold: #
             #print(res[np.argmax(res)])
-            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255,255,255), 1, cv2.LINE_AA)
         else:
             cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
         
