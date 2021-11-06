@@ -194,13 +194,21 @@ def extract_keypoints(results):
     #return np.concatenate([pose, face, lh, rh]) # concatenate all the keypoints that are flattened
     return np.concatenate([pose, lh, rh])
 
-def prob_viz(res, actions, input_frame, colors):
+def prob_viz(res, actions, input_frame, colors, threshold):
     output_frame = input_frame.copy()
 
-    
+    #print(res)
+
+
     for num, prob in enumerate(res):
         cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1) #change length of bar depending on probability
-        cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
+        
+        #print(num, prob)
+        if np.argmax(res) == num and  res[np.argmax(res)] >= threshold: #
+            #print(res[np.argmax(res)])
+            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1, cv2.LINE_AA)
+        else:
+            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
         
         #thres = 0.5
         #if prob >= thres:

@@ -93,12 +93,15 @@ def get_next_action():
 def get_current_score():
     return jsonify(current_score)
 
+reset_score_frame_count = 0
 
 @app.route('/reset_score')
 def reset_score():
     global current_score
-
+    global reset_score_frame_count
     current_score = 0
+
+    reset_score_frame_count = 10
     print('current_score', current_score)
 
     return("nothing")
@@ -196,6 +199,7 @@ def gen():
     #print('Current Action:', current_action)
 
     global current_score
+    global reset_score_frame_count
     global mediapipe_detection_confidence
     # print(mediapipe_detection_confidence)
 
@@ -249,7 +253,7 @@ def gen():
                         
                         # if green screen is no longer displayed, then checks if action is correct
                         ''' ===== Checks if Action is Correct ===== '''
-                        if res[np.argmax(res)] > threshold and actions[np.argmax(res)] == current_action and frame_count == 0:
+                        if res[np.argmax(res)] >= threshold and actions[np.argmax(res)] == current_action and frame_count == 0:
 
                             print('Correct!')
                             #current_action = random.choice(actions_list)
@@ -268,23 +272,37 @@ def gen():
                                 sentence.append(actions[np.argmax(res)])
 
                         # display most confidence animal emoji
-                        if res[np.argmax(res)] > threshold and actions[np.argmax(res)] != 'No Action':
+                        if res[np.argmax(res)] >= threshold and actions[np.argmax(res)] != 'No Action':
                             # print(actions[np.argmax(res)])
 
                             # Add overlay image if the most confident is more than the threshold
                             add_image(image, results, str(
                                 actions[np.argmax(res)]))
 
-                    if len(sentence) > 5:
-                        sentence = sentence[-5:]
+                    if len(sentence) > 7:
+                        sentence = sentence[-7:]
 
-                    # Viz probabilities
-                    image = prob_viz(res, actions, image, colors)
+                    ''' ====== Class Probability Display ===== '''
+                    image = prob_viz(res, actions, image, colors, threshold)
+
+                ''' ====== Correct Classes Top Display Bar ===== '''
 
                 cv2.rectangle(image, (0, 0), (width, 40), (0, 60, 123), -1)
-                cv2.putText(image, ' '.join(
-                    sentence), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
                 
+                if len(sentence) > 0:
+                    cv2.putText(image, ' ' + sentence[-1], 
+                        (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (144, 250, 144), 2, cv2.LINE_AA)
+                    
+                    (text_width, text_height), baseline = cv2.getTextSize(sentence[-1], cv2.FONT_HERSHEY_SIMPLEX,1, 2)
+                    
+                if len(sentence)> 1:
+                    
+                    cv2.putText(image, '  ' + ' '.join(
+                        sentence[::-1][1:]), (text_width, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+                  
+                
+
+
                 ''' ====== loading model screen ====== '''
                 if len(sequence) < 30:
                     width = image.shape[1]  # 480
@@ -299,8 +317,11 @@ def gen():
                     # apply the overlay
                     cv2.addWeighted(overlay, alpha, image, 1 - alpha,
                                     0, image)
+                    
+                    (text_width, text_height), baseline = cv2.getTextSize('Loading...', cv2.FONT_HERSHEY_SIMPLEX,1, 2)
 
-                    cv2.putText(image, 'Loading...', (width//2 - 75, height//2 + 30),
+
+                    cv2.putText(image, 'Loading...', (width//2 - text_width//2, height//2 + text_height),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
                 
                 ''' ====== draw landmarks ====== '''
@@ -335,6 +356,27 @@ def gen():
                         image, overlay, width//2 - 35, height//2-70)
 
                     frame_count -= 1
+
+                ''' ====== display reset score screen ====== '''
+                if reset_score_frame_count > 0:
+                    width = image.shape[1]  # 480
+                    height = image.shape[0]  # 640
+                    alpha = 0.5
+
+                    overlay = image.copy()
+
+                    cv2.rectangle(overlay, (0, 0), (width, height),
+                                  (255, 255, 255), -1)
+
+                    # apply the overlay
+                    cv2.addWeighted(overlay, alpha, image, 1 - alpha,
+                                    0, image)
+                    
+                    (text_width, text_height), baseline = cv2.getTextSize('Score Reset!', cv2.FONT_HERSHEY_SIMPLEX,1, 2)
+
+                    cv2.putText(image, 'Score Reset!', (width//2 - text_width//2, height//2 + text_height),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+                    reset_score_frame_count -= 1
 
 
                 ''' ===== display screen to html ===== '''
