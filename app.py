@@ -195,8 +195,13 @@ def gen():
     #threshold = 0.5
     #threshold = min_detection_confidence
     """Video streaming generator function."""
-    cap = cv2.VideoCapture(0)
-    sent = ''
+    #cap = cv2.VideoCapture(0)
+
+
+    cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
     frame_count = 0
 
@@ -223,6 +228,7 @@ def gen():
 
             width = image.shape[1]  # 480
             height = image.shape[0]  # 640
+            #print(width,height)
 
             if ret == True:
 
@@ -231,13 +237,42 @@ def gen():
 
                 
 
-                ''' 2. Prediction logic '''
+                ''' ===== Prediction logic ===== '''
                 keypoints = extract_keypoints(results)
 
 
                 # append the most recent 30 frames of keypoints
                 sequence.append(keypoints)
                 sequence = sequence[-30:]
+
+
+                ''' ====== loading model screen ====== '''
+                if len(sequence) < 30:
+                    width = image.shape[1]  # 480
+                    height = image.shape[0]  # 640
+                    alpha = 0.5
+
+                    overlay = image.copy()
+
+                    cv2.rectangle(overlay, (0, 0), (width, height),
+                                  (255, 255, 255), -1)
+
+                    # apply the overlay
+                    cv2.addWeighted(overlay, alpha, image, 1 - alpha,
+                                    0, image)
+                    
+                    (text_width, text_height), baseline = cv2.getTextSize('Loading...', cv2.FONT_HERSHEY_SIMPLEX,1, 2)
+
+
+                    cv2.putText(image, 'Loading...', (width//2 - text_width//2, height//2 + text_height),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+                
+                ''' ====== draw landmarks ====== '''
+                # Draw landmarks when lstm model is ready
+                if toggle_keypoints and len(sequence) == 30:
+                    draw_styled_landmarks(image, results)
+
+
 
                 if len(sequence) == 30:
                     res = model.predict(np.expand_dims(sequence, axis=0))[0]
@@ -250,7 +285,7 @@ def gen():
                     #print(np.unique(predictions[-10:]))
                     #print(np.full((1,10),np.argmax(res)))
 
-                    ''' 3. Vizualization logic  '''
+                    ''' ===== Vizualization logic ===== '''
 
                     # the last class index prediction is equal to the highest predicted class index in result
                     if np.unique(predictions[-10:])[0] == np.argmax(res): 
@@ -283,55 +318,27 @@ def gen():
                             add_image(image, results, str(
                                 actions[np.argmax(res)]))
 
-                    if len(sentence) > 7:
-                        sentence = sentence[-7:]
+                    if len(sentence) > 15:
+                        sentence = sentence[-15:]
 
                     ''' ====== Class Probability Display ===== '''
                     image = prob_viz(res, actions, image, colors, threshold)
 
                 ''' ====== Correct Classes Top Display Bar ===== '''
 
-                cv2.rectangle(image, (0, 0), (width, 40), (0, 60, 123), -1)
+                cv2.rectangle(image, (0, 0), (width, 50), (0, 60, 123), -1)
                 
                 if len(sentence) > 0:
                     cv2.putText(image, ' ' + sentence[-1], 
-                        (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (144, 250, 144), 2, cv2.LINE_AA)
+                        (3, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (245, 221, 173), 2, cv2.LINE_AA)
                     
                     (text_width, text_height), baseline = cv2.getTextSize(sentence[-1], cv2.FONT_HERSHEY_SIMPLEX,1, 2)
                     
                 if len(sentence)> 1:
                     
                     cv2.putText(image, '  ' + ' '.join(
-                        sentence[::-1][1:]), (text_width, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-                  
-                
+                        sentence[::-1][1:]), (text_width, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-
-                ''' ====== loading model screen ====== '''
-                if len(sequence) < 30:
-                    width = image.shape[1]  # 480
-                    height = image.shape[0]  # 640
-                    alpha = 0.5
-
-                    overlay = image.copy()
-
-                    cv2.rectangle(overlay, (0, 0), (width, height),
-                                  (255, 255, 255), -1)
-
-                    # apply the overlay
-                    cv2.addWeighted(overlay, alpha, image, 1 - alpha,
-                                    0, image)
-                    
-                    (text_width, text_height), baseline = cv2.getTextSize('Loading...', cv2.FONT_HERSHEY_SIMPLEX,1, 2)
-
-
-                    cv2.putText(image, 'Loading...', (width//2 - text_width//2, height//2 + text_height),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
-                
-                ''' ====== draw landmarks ====== '''
-                # Draw landmarks when lstm model is ready
-                if toggle_keypoints and len(sequence) == 30:
-                    draw_styled_landmarks(image, results)
 
 
                 ''' ====== display correct screen ====== '''

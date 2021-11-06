@@ -101,7 +101,7 @@ body {
 .video-feed {
   object-fit: cover;
   max-width: 90%;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 150px);
 }
 .slidecontainer {
   width: auto;

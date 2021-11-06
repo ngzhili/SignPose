@@ -199,17 +199,31 @@ def prob_viz(res, actions, input_frame, colors, threshold):
 
     #print(res)
 
+    multiple = 47
 
+    # num = class index , prob = probability of the class
     for num, prob in enumerate(res):
-        cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1) #change length of bar depending on probability
+
+
         
         #print(num, prob)
-        if np.argmax(res) == num and  res[np.argmax(res)] >= threshold: #
+        if np.argmax(res) == num and  res[np.argmax(res)] >= threshold:
             #print(res[np.argmax(res)])
-            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255,255,255), 1, cv2.LINE_AA)
-        else:
-            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
+            (text_width, text_height), baseline = cv2.getTextSize(actions[num]+' '+str(round(prob*100,2))+'% ', cv2.FONT_HERSHEY_SIMPLEX,1, 2)
+            
+            cv2.rectangle(output_frame, (0,60+num*multiple), (int(prob*text_width), 95+num*multiple), colors[num], -1) #change length of bar depending on probability
+
+            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 90+num*multiple), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA)
         
+        else:
+            (text_width, text_height), baseline = cv2.getTextSize(actions[num]+' '+str(round(prob*100,2))+'% ', cv2.FONT_HERSHEY_SIMPLEX,1, 2)
+
+            cv2.rectangle(output_frame, (0,60+num*multiple), (int(prob*text_width), 95+num*multiple), colors[num], -1) #change length of bar depending on probability
+            
+            cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (5, 90+num*multiple), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
+        
+        
+
         #thres = 0.5
         #if prob >= thres:
             #cv2.putText(output_frame, actions[num]+' '+str(round(prob*100,2))+'%', (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
