@@ -218,20 +218,14 @@ def gen():
 
             if ret == True:
 
-                # print('threshold',threshold)
-
                 # Make detections
                 image, results = mediapipe_detection(image, holistic)
-                # print(results)
 
-                # Draw landmarks
-                if toggle_keypoints:
-                    draw_styled_landmarks(image, results)
+                
 
-                # 2. Prediction logic
+                ''' 2. Prediction logic '''
                 keypoints = extract_keypoints(results)
 
-                # print(keypoints)
 
                 # append the most recent 30 frames of keypoints
                 sequence.append(keypoints)
@@ -248,7 +242,7 @@ def gen():
                     #print(np.unique(predictions[-10:]))
                     #print(np.full((1,10),np.argmax(res)))
 
-                    # 3. Vizualization logic 
+                    ''' 3. Vizualization logic  '''
 
                     # the last class index prediction is equal to the highest predicted class index in result
                     if np.unique(predictions[-10:])[0] == np.argmax(res): 
@@ -290,7 +284,32 @@ def gen():
                 cv2.rectangle(image, (0, 0), (width, 40), (0, 60, 123), -1)
                 cv2.putText(image, ' '.join(
                     sentence), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+                
+                ''' ====== loading model screen ====== '''
+                if len(sequence) < 30:
+                    width = image.shape[1]  # 480
+                    height = image.shape[0]  # 640
+                    alpha = 0.5
 
+                    overlay = image.copy()
+
+                    cv2.rectangle(overlay, (0, 0), (width, height),
+                                  (255, 255, 255), -1)
+
+                    # apply the overlay
+                    cv2.addWeighted(overlay, alpha, image, 1 - alpha,
+                                    0, image)
+
+                    cv2.putText(image, 'Loading...', (width//2 - 75, height//2 + 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+                
+                ''' ====== draw landmarks ====== '''
+                # Draw landmarks when lstm model is ready
+                if toggle_keypoints and len(sequence) == 30:
+                    draw_styled_landmarks(image, results)
+
+
+                ''' ====== display correct screen ====== '''
                 # display_correct_screen if frame_count is more than 0
                 if frame_count > 0:
                     # display_correct_screen(image)
@@ -317,6 +336,8 @@ def gen():
 
                     frame_count -= 1
 
+
+                ''' ===== display screen to html ===== '''
                 # encode output image to bytes
                 frame = cv2.imencode('.jpg', image)[1].tobytes()
 
