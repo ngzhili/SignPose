@@ -212,6 +212,10 @@ def gen():
             global toggle_keypoints
 
             ret, image = cap.read()
+
+            width = image.shape[1]  # 480
+            height = image.shape[0]  # 640
+
             if ret == True:
 
                 # print('threshold',threshold)
@@ -229,6 +233,7 @@ def gen():
 
                 # print(keypoints)
 
+                # append the most recent 30 frames of keypoints
                 sequence.append(keypoints)
                 sequence = sequence[-30:]
 
@@ -236,16 +241,25 @@ def gen():
                     res = model.predict(np.expand_dims(sequence, axis=0))[0]
                     # print(actions[np.argmax(res)])
                     predictions.append(np.argmax(res))
+                    
+                    #print(predictions[-10:])
+                    #print(np.unique(predictions[-10:]))
+                    #print(np.unique(predictions[-10:])[0])
+                    #print(np.unique(predictions[-10:]))
+                    #print(np.full((1,10),np.argmax(res)))
 
-                # 3. Viz logic
-                    if np.unique(predictions[-10:])[0] == np.argmax(res):
+                    # 3. Vizualization logic 
 
+                    # the last class index prediction is equal to the highest predicted class index in result
+                    if np.unique(predictions[-10:])[0] == np.argmax(res): 
+                        
+                        # if green screen is no longer displayed, then checks if action is correct
                         ''' ===== Checks if Action is Correct ===== '''
-                        if res[np.argmax(res)] > threshold and actions[np.argmax(res)] == current_action:
+                        if res[np.argmax(res)] > threshold and actions[np.argmax(res)] == current_action and frame_count == 0:
 
                             print('Correct!')
                             #current_action = random.choice(actions_list)
-                            frame_count = 10  # 15
+                            frame_count = 15  # 15
 
                             emit_new_action()
                             #print('Current Action:', current_action)
@@ -259,6 +273,7 @@ def gen():
                             else:
                                 sentence.append(actions[np.argmax(res)])
 
+                        # display most confidence animal emoji
                         if res[np.argmax(res)] > threshold and actions[np.argmax(res)] != 'No Action':
                             # print(actions[np.argmax(res)])
 
@@ -272,7 +287,7 @@ def gen():
                     # Viz probabilities
                     image = prob_viz(res, actions, image, colors)
 
-                cv2.rectangle(image, (0, 0), (700, 40), (0, 60, 123), -1)
+                cv2.rectangle(image, (0, 0), (width, 40), (0, 60, 123), -1)
                 cv2.putText(image, ' '.join(
                     sentence), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
