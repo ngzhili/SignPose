@@ -1,4 +1,4 @@
-# SignPose: 
+# SignPose: A Dynamic Sign Language Detection Game
 A LSTM Keypoint Model deployed on Flask that detects real time dynamic sign language (ASL animals) on browser.
 
 ## Web Application deployed via flask
