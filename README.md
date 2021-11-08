@@ -5,9 +5,22 @@ A LSTM Keypoint Model deployed on Flask that detects real time dynamic sign lang
 ![signpose_cow](https://user-images.githubusercontent.com/69728128/140792190-7909b360-1703-4a62-8642-5fd6ab2400c1.JPG)
 
 
-### 1. Cow Dynamic Sign Language Detection
+### Animal Dynamic Sign Language Detection
+
+1. Cow
 ![cow_correct](https://user-images.githubusercontent.com/69728128/140792079-6e63fb65-9403-46a5-97d7-86bad5e25068.gif)
 
+2. Elephant
+![elephant_inference](https://user-images.githubusercontent.com/69728128/140793900-d1846730-643b-4daa-b39c-1d2f967caa22.gif)
+
+3. Butterfly
+![butterfly_inference](https://user-images.githubusercontent.com/69728128/140794314-463e5e06-a765-4234-9821-cda51ee477ef.gif)
+
+4. Gorilla
+![gorilla_inference](https://user-images.githubusercontent.com/69728128/140794693-b2abdc2e-8bb0-45b2-bf1f-eef7761c9c3a.gif)
+
+5. Bird
+![bird_inference](https://user-images.githubusercontent.com/69728128/140794935-ba3cc88c-df70-4e9d-ab90-6c46610b1d30.gif)
 
 ## Video Demo of Web App
 
