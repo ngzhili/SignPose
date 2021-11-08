@@ -1,6 +1,9 @@
 # SignPose: A Dynamic Sign Language Detection Game
 A LSTM Keypoint Model deployed on Flask that detects real time dynamic sign language (ASL animals) on browser.
 
+Explore the static version of our sign language game [here](https://github.com/yappeizhen/AlphaSign).
+
+
 ## Web Application Home Page
 ![signpose_cow](https://user-images.githubusercontent.com/69728128/140792190-7909b360-1703-4a62-8642-5fd6ab2400c1.JPG)
 
