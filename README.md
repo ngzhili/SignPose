@@ -2,19 +2,22 @@
 A LSTM Keypoint Model deployed on Flask that detects real time dynamic sign language (ASL animals) on browser.
 
 ## Web Application deployed via flask
+![signpose_cow](https://user-images.githubusercontent.com/69728128/140792190-7909b360-1703-4a62-8642-5fd6ab2400c1.JPG)
 
-1. Cow Sign Language Detection
 
-![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/32794c1761fa9fec34b04164e583264050822f94/readme-images/lstm-1.JPG)
+### 1. Cow Dynamic Sign Language Detection
+![cow_correct](https://user-images.githubusercontent.com/69728128/140792079-6e63fb65-9403-46a5-97d7-86bad5e25068.gif)
 
-2. Elephant Sign Language Detection
 
-![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/32794c1761fa9fec34b04164e583264050822f94/readme-images/lstm-2.JPG)
+## Video Demo of Web App
+
+https://user-images.githubusercontent.com/69728128/140792705-d215ba34-4cca-4d05-aa04-c8168f206cd4.mp4
 
 ## Exploratory Data Analysis
 Breakdown of Train Test Split using Stratified Sampling (to ensure even distribution of train and test data)
 
 ![image](https://github.com/ngzhili/LSTM_Keypoint_Sign_Language_Detector/blob/4dcd3fb656f62611dc81b497ab7eef885ff3ab4a/readme-images/train_test_distribution.png)
+
 
 ## LSTM Model Architecture
 ```
