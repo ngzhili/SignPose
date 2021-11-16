@@ -42,13 +42,20 @@ Breakdown of Train Test Split using Stratified Sampling (to ensure even distribu
 
 ## LSTM Model Architecture
 ```
+
 model = Sequential()
-model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662))) #each video has input shape of 30 frames of 1662 keypoints: X.shape
+model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,258))) #each video has input shape of 30 frames of 258 keypoints: X.shape (Handpose + Bodypose)
+model.add(Dropout(0.2))
 model.add(LSTM(128, return_sequences=True, activation='relu'))
+model.add(Dropout(0.2))
 model.add(LSTM(64, return_sequences=False, activation='relu')) #next layer is a dense layer so we do not return sequences here
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
+#Compile defines the loss function, the optimizer and the metrics. 
+model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
+
+
 ```
 
 ## Model Evaluation
