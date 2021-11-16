@@ -53,7 +53,7 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
 
-#Compile defines the loss function, the optimizer and the metrics. 
+# Compile defines the loss function, the optimizer and the metrics. 
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 ```
 
