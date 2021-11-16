@@ -138,7 +138,7 @@ def index():
 label_map = {label: num for num, label in enumerate(
     actions)}  # create label map dictionary
 
-''' ============== Build Model using Keras ============== '''
+''' ============== Build LSTM Model using Keras ============== '''
 #model = Sequential()
 # model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662))) #each video has input shape of 30 frames of 1662 keypoints: X.shape
 #model.add(LSTM(128, return_sequences=True, activation='relu'))
@@ -185,6 +185,7 @@ current_score = 0
 
 sentence = []
 
+
 def gen():
     # 1. New detection variables
 
@@ -212,6 +213,8 @@ def gen():
     global mediapipe_detection_confidence
     # print(mediapipe_detection_confidence)
 
+    print('gen started')
+
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
         # Read until video is completed
 
@@ -231,11 +234,11 @@ def gen():
             #print(width,height)
 
             if ret == True:
+                annotated_image = image.copy()
 
                 # Make detections
                 image, results = mediapipe_detection(image, holistic)
 
-                
 
                 ''' ===== Prediction logic ===== '''
                 keypoints = extract_keypoints(results)
@@ -404,6 +407,7 @@ def gen():
 @app.route('/video_feed')
 def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
+    print('video feed running')
 
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
