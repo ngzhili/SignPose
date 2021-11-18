@@ -70,9 +70,11 @@ model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categ
 
 ### Confusion Matrix
 1. Train Confusion Matrix
+
 ![image](https://github.com/ngzhili/SignPose/blob/47cd40e2e2c0a842177228ab721211993c860188/readme-images/train-confusion-matrix.JPG)
 
 2. Test Confusion Matrix
+
 ![image](https://github.com/ngzhili/SignPose/blob/47cd40e2e2c0a842177228ab721211993c860188/readme-images/test-confusion-matrix.JPG)
 
 
